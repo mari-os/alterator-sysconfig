@@ -3,7 +3,7 @@
 . /usr/share/alterator/build/backend3.sh
 
 
-XKB_DATADIR=/etc/alterator/xkb/data
+XKB_DATADIR=/etc/alterator/syskbd/data
 
 KBD_CONFIG=/etc/sysconfig/keyboard.test
 XKB_CONFIG=/etc/X11/xinit/Xkbmap.test

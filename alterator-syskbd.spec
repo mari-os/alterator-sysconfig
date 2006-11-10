@@ -35,6 +35,7 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %files -f %name.lang
+%_sysconfdir/alterator/syskbd
 %_altdata_dir/ui/*/
 %_alterator_backend3dir/*
 
