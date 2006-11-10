@@ -11,6 +11,6 @@ include /usr/share/alterator/build/ui2.mak
 include /usr/share/alterator/build/backend.mak
 
 install-data:
-	$(INSTALL) -d $(sysconfdir)/alterator/xkb
-	cp -a data $(sysconfdir)/alterator/xkb
+	$(INSTALL) -d $(sysconfdir)/alterator/syskbd
+	cp -a data $(sysconfdir)/alterator/syskbd
 
