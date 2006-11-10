@@ -1,0 +1,3 @@
+-layout us,by
+-option grp:ctrl_shift_toggle
+-variant ,winkeys
