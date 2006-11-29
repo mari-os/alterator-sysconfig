@@ -1,4 +1,4 @@
-(document:surround "/std/base")
+(document:surround "/std/frame")
 (document:insert "/std/functions")
 
 (document:envelop with-translation _ "alterator-syskbd")
@@ -12,13 +12,9 @@
                          ("nodeadkeys" . ,(_ "Without dead keys"))))
 
 
-(define main-language (let ()
-                        (define-operation get-lang)
-                        (car (get-lang (fluid-ref generic-session)))))
-
 (define keyboards (woo-catch
                    (lambda()
-                     (woo-list-names "/syskbd" 'lang main-language))
+                     (woo-list-names "/syskbd"))
                    (lambda(reason) '())))
 
 (define (get-name item)
@@ -29,11 +25,8 @@
    (thunk
     (let ((current (keyboard-type current)))
       (and (>= current 0)
-           (woo-write (string-append "/syskbd/"
-                                     main-language
-                                     "/"
-                                     (list-ref keyboards current)))))
-        #t)
+           (woo-write (string-append "/syskbd/" (list-ref keyboards current)))))
+    #t)
    (lambda(reason) #f)))
 
 ;;;;;;;;;;;;
@@ -46,6 +39,6 @@ margin 50
                             rows (map get-name keyboards)
 			    (and (> (length keyboards) 0) (current 0))))
 
-;;will be replaced with frame:on-next
-(button "Apply" (when clicked
-                  (apply-keyboard)))
+(frame:on-next apply-keyboard)
+
+(document:root (when loaded (if (null? keyboards) (frame:next))))

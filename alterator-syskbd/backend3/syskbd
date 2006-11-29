@@ -12,16 +12,18 @@ on_message()
 {
 	case "$in_action" in
 		list)
+			local language=${in_language%%;*}
 			echo "("
-			[ -d "$XKB_DATADIR"/"$in_lang" ] &&
-			for i in "$XKB_DATADIR"/"$in_lang"/*.xkb ; do echo `basename $i`; done | 
-				sed s,.xkb,,|
-				sed 's,.*,("&"),'
+			[ -d "$XKB_DATADIR/$language" ] &&
+				find "$XKB_DATADIR/$language" -name '*.xkb'|
+					sed -r "s,$XKB_DATADIR/$language/([^/]+).xkb,(\"\1\"),"
 			echo ")"
 			;;
 		write)
-			install -Dpm644 "$XKB_DATADIR"/"$in__objects".xkb "$XKB_CONFIG"
-			install -Dpm644 "$XKB_DATADIR"/"$in__objects".kbd "$KBD_CONFIG"
+			local language=${in_language%%;*}
+			local path="$XKB_DATADIR/$language/$in__objects"
+			install -Dpm644 "$path.xkb" "$XKB_CONFIG"
+			install -Dpm644 "$path.kbd" "$KBD_CONFIG"
 			/usr/bin/setxkbmap -option ""
 			/usr/bin/setxkbmap `cat "$XKB_CONFIG"`
 			echo "()"
