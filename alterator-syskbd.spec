@@ -2,7 +2,7 @@
 
 Name: alterator-syskbd
 Version: 0.1
-Release: alt1
+Release: alt2
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,9 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Wed Nov 29 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt2
+- enable wizard callbacks
+
 * Fri Nov 10 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt1
 - initial release
 
