@@ -22,9 +22,9 @@ on_message()
 		write)
 			local language=${in_language%%;*}
 			local path="$XKB_DATADIR/$language/$in__objects"
-			install -Dpm644 "$path.xkb" "$XKB_CONFIG"
-			install -Dpm644 "$path.kbd" "$KBD_CONFIG"
-			/usr/bin/setxkbmap -option ""
+			install -Dpm644 "$path.xkb" "$XKB_CONFIG" &&
+			install -Dpm644 "$path.kbd" "$KBD_CONFIG" &&
+			/usr/bin/setxkbmap -option "" &&
 			/usr/bin/setxkbmap `cat "$XKB_CONFIG"`
 			echo "()"
 			;;
