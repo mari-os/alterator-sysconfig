@@ -41,4 +41,7 @@ margin 50
 
 (frame:on-next apply-keyboard)
 
-(document:root (when loaded (if (null? keyboards) (frame:next))))
+(document:root (when loaded (if (null? keyboards)
+                                (if (eq? (global 'frame:direction) 'next)
+                                    (frame:next)
+                                    (frame:back)))))
