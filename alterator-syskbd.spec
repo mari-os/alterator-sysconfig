@@ -43,6 +43,7 @@ alterator module for system keyboard (both xkb and kbd) setup
 %changelog
 * Mon Dec 04 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt3
 - auto skip in both directions
+- save translations in utf8 encodings to avoid iconv usage on installer's stage2 
 
 * Wed Nov 29 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt2
 - enable wizard callbacks
