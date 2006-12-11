@@ -1,9 +1,10 @@
 (use-modules (alterator transport server-socket)
              (alterator transport pipe-channel)
-	     (alterator transport std-channel))
+	     (alterator transport std-channel)
+	     (alterator lookout))
 
 (telegraph
-  (pipe-in "/usr/bin/qtbrowser")
+  (pipe-in "/usr/bin/alterator-browser-qt")
 ;  (server-socket)
 ;  (std-in)
   (lookout)

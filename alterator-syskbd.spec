@@ -2,7 +2,7 @@
 
 Name: alterator-syskbd
 Version: 0.1
-Release: alt3
+Release: alt4
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,9 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Mon Dec 11 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt4
+- improve interface for low resolution screens
+
 * Mon Dec 04 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt3
 - auto skip in both directions
 - save translations in utf8 encodings to avoid iconv usage on installer's stage2 
