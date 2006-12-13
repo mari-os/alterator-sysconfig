@@ -5,8 +5,8 @@
 
 XKB_DATADIR=/etc/alterator/syskbd/data
 
-KBD_CONFIG=/etc/sysconfig/keyboard.test
-XKB_CONFIG=/etc/X11/xinit/Xkbmap.test
+KBD_CONFIG=/etc/sysconfig/keyboard
+XKB_CONFIG=/etc/X11/xinit/Xkbmap
 
 on_message()
 {

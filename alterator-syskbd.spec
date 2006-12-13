@@ -2,7 +2,7 @@
 
 Name: alterator-syskbd
 Version: 0.1
-Release: alt4
+Release: alt5
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,9 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Wed Dec 13 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt5
+- really change system files
+
 * Mon Dec 11 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt4
 - improve interface for low resolution screens
 
