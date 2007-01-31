@@ -25,7 +25,9 @@
    (thunk
     (let ((current (keyboard-type current)))
       (and (>= current 0)
-           (woo-write (string-append "/syskbd/" (list-ref keyboards current)))))
+           (begin
+             (woo-write (string-append "/syskbd/" (list-ref keyboards current)))
+             (woo-write (string-append "/autoinstall/syskbd/" (list-ref keyboards current))))))
     #t)
    (lambda(reason) #f)))
 
@@ -45,7 +47,13 @@
 
 (frame:on-next apply-keyboard)
 
-(document:root (when loaded (if (null? keyboards)
-                                (if (eq? (global 'frame:direction) 'next)
-                                    (frame:next)
-                                    (frame:back)))))
+(define (skip-step)
+  (if (eq? (global 'frame:direction) 'next)
+      (frame:next)
+      (frame:back)))
+
+(document:root (when loaded
+                 (let ((len (length keyboards)))
+                   (and (= len 1) (apply-keyboard))
+                   (and (<= len 1) (skip-step)))))
+

@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-syskbd
-Version: 0.1
-Release: alt5
+Version: 0.2
+Release: alt1
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,10 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Wed Jan 31 2007 Stanislav Ievlev <inger@altlinux.org> 0.2-alt1
+- add support for autoinstall backend
+- automatically select single keyboard variant
+
 * Wed Dec 13 2006 Stanislav Ievlev <inger@altlinux.org> 0.1-alt5
 - really change system files
 
