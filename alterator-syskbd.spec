@@ -2,7 +2,7 @@
 
 Name: alterator-syskbd
 Version: 0.2
-Release: alt1
+Release: alt2
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,9 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Wed Jan 31 2007 Stanislav Ievlev <inger@altlinux.org> 0.2-alt2
+- add default action
+
 * Wed Jan 31 2007 Stanislav Ievlev <inger@altlinux.org> 0.2-alt1
 - add support for autoinstall backend
 - automatically select single keyboard variant

@@ -28,6 +28,9 @@ on_message()
 			/usr/bin/setxkbmap `cat "$XKB_CONFIG"`
 			echo "()"
 			;;
+		*)
+			echo '#f'
+			;;
 	esac
 }
 
