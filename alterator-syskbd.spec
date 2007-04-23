@@ -2,7 +2,7 @@
 
 Name: alterator-syskbd
 Version: 0.2
-Release: alt2
+Release: alt3
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,9 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Mon Apr 23 2007 Stanislav Ievlev <inger@altlinux.org> 0.2-alt3
+- add Ukrainian translation
+
 * Wed Jan 31 2007 Stanislav Ievlev <inger@altlinux.org> 0.2-alt2
 - add default action
 
