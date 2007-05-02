@@ -1,19 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of uk.po to Ukrainian
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: uk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-12-11 16:11+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2007-04-26 12:20+0300\n"
+"Last-Translator: Serhii Hlodin <hlodin@altlinux.ru>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ui/syskbd/index.scm:7
 msgid "CapsLock key"
@@ -21,7 +22,7 @@ msgstr "Клавіша CapsLock"
 
 #: ui/syskbd/index.scm:8
 msgid "Control+Shift keys"
-msgstr "Клавіши Control и Shift одночасно"
+msgstr "Клавіші Control и Shift одночасно"
 
 #: ui/syskbd/index.scm:9
 msgid "Control key"
@@ -42,3 +43,4 @@ msgstr "Без 'мертвих' клавіш"
 #: ui/syskbd/index.scm:36
 msgid "Please select keyboard switch type"
 msgstr "Виберіть варіант перемикання розкладки клавіатури"
+
