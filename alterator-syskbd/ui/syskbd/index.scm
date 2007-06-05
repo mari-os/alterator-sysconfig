@@ -4,7 +4,8 @@
 (document:envelop with-translation _ "alterator-syskbd")
 
 
-(define keyboard-names `(("caps_toggle" . ,(_ "CapsLock key"))
+(define keyboard-names `(("alt_sh_toggle" . ,(_ "Alt+Shift key"))
+			 ("caps_toggle" . ,(_ "CapsLock key"))
                          ("ctrl_shift_toggle" . ,(_ "Control+Shift keys"))
                          ("ctrl_toggle" . ,(_ "Control key"))
                          ("toggle" . ,(_ "Alt key"))
