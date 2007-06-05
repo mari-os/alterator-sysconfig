@@ -4,7 +4,7 @@ Name: alterator-syskbd
 Version: 0.2
 Release: alt5
 
-Packager: Stanislav Ievlev <inger@altlinux.org>
+Packager: Anton V. Boyarshinov <boyarsh@altlinux.ru>
 
 BuildArch:	noarch
 
