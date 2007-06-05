@@ -16,7 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ui/syskbd/index.scm:7
-#, fuzzy
 msgid "Alt+Shift key"
 msgstr "Клавиши Alt и Shift одновременно"
 
