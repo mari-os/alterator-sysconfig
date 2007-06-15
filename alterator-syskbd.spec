@@ -2,7 +2,7 @@
 
 Name: alterator-syskbd
 Version: 0.2
-Release: alt5
+Release: alt6
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -41,6 +41,9 @@ alterator module for system keyboard (both xkb and kbd) setup
 
 
 %changelog
+* Fri Jun 15 2007 Stanislav Ievlev <inger@altlinux.org> 0.2-alt6
+- to sisyphus
+
 * Mon Jun 04 2007 Anton V. Boyrshonov <boyarsh@altlinux.ru> 0.2-alt5
 - added alt-shift toggle 
 
