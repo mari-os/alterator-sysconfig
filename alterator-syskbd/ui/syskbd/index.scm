@@ -9,6 +9,7 @@
                          ("ctrl_shift_toggle" . ,(_ "Control+Shift keys"))
                          ("ctrl_toggle" . ,(_ "Control key"))
                          ("toggle" . ,(_ "Alt key"))
+			 ("ctrl_shift_toggle_ru_ua" . ,(_ "Control+Shift keys, UK,RU,EN"))
                          ("default" . ,(_ "Default"))
                          ("nodeadkeys" . ,(_ "Without dead keys"))))
 
