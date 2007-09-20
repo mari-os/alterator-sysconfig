@@ -1,4 +1,4 @@
-NAME=syskbd
+NAME=sysconfig
 
 INSTALL=/usr/bin/install
 
@@ -11,6 +11,7 @@ include /usr/share/alterator/build/ui2.mak
 include /usr/share/alterator/build/backend.mak
 
 install-data:
-	$(INSTALL) -d $(sysconfdir)/alterator/syskbd
-	cp -a data $(sysconfdir)/alterator/syskbd
-
+	$(INSTALL) -d $(sysconfdir)/alterator/sysconfig
+	cp -a data/* $(sysconfdir)/alterator/sysconfig
+	$(INSTALL) -d $(datadir)/install2
+	cp -a preinstall.d $(datadir)/install2

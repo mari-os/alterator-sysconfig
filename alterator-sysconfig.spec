@@ -1,8 +1,14 @@
 %define _altdata_dir %_datadir/alterator
 
-Name: alterator-syskbd
-Version: 0.2
-Release: alt8
+Name: alterator-sysconfig
+Version: 0.3
+Release: alt1
+
+%add_findreq_skiplist %_datadir/install2/preinstall.d/*
+
+#save previous version in branch
+#Provides: alterator-syskbd
+#Obsoletes: alterator-syskbd
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -10,7 +16,7 @@ BuildArch:	noarch
 
 Source:%name-%version.tar
 
-Summary: alterator module for the system keyboard setup
+Summary: alterator module for basic system settings
 License: GPL
 Group: System/Configuration/Other
 Requires: alterator >= 2.9, control >= 0.7.1-alt1
@@ -21,7 +27,7 @@ BuildPreReq: alterator >= 2.9-alt0.10, alterator-standalone >= 2.5-alt0.3
 BuildRequires: alterator
 
 %description
-alterator module for system keyboard (both xkb and kbd) setup
+alterator module for basic system settings ( console and X11 keyboard, console font, system locale)
 
 %prep
 %setup -q
@@ -30,17 +36,22 @@ alterator module for system keyboard (both xkb and kbd) setup
 %make_build libdir=%_libdir
 
 %install
-%makeinstall DESTDIR=%buildroot
+%makeinstall
 %find_lang %name
 
 
 %files -f %name.lang
-%_sysconfdir/alterator/syskbd
+%_sysconfdir/alterator/sysconfig
 %_altdata_dir/ui/*/
 %_alterator_backend3dir/*
+%_datadir/install2/preinstall.d/*
 
 
 %changelog
+* Thu Sep 20 2007 Stanislav Ievlev <inger@altlinux.org> 0.3-alt1
+- join together all basic system setup:
+  console font, console and X11 keyboard layout, system locale
+
 * Mon Aug 06 2007 Anton V. Boyarshinov <boyarsh@altlinux.ru> 0.2-alt8
 - control switching fixed 
 

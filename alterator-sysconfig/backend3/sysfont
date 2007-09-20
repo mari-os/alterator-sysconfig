@@ -1,0 +1,23 @@
+#!/bin/sh
+
+. /usr/share/alterator/build/backend3.sh
+
+
+DATADIR=/etc/alterator/sysconfig/
+CONFIGDIR=/etc/sysconfig/
+
+on_message()
+{
+	case "$in_action" in
+		write)
+			#TODO: use language information
+			cp -af "$DATADIR/consolefont" "$CONFIGDIR/consolefont"
+			echo "()"
+			;;
+		*)
+			echo '#f'
+			;;
+	esac
+}
+
+message_loop

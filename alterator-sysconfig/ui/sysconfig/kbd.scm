@@ -1,7 +1,7 @@
 (document:surround "/std/frame")
 (document:insert "/std/functions")
 
-(document:envelop with-translation _ "alterator-syskbd")
+(document:envelop with-translation _ "alterator-sysconfig")
 
 
 (define keyboard-names `(("alt_sh_toggle" . ,(_ "Alt+Shift key"))
@@ -25,6 +25,10 @@
 (define (apply-keyboard)
   (woo-catch
    (thunk
+    ;;save console font
+    (woo-write "/sysfont")
+    (woo-write "/autoinstall/sysfont")
+    ;;save console and X11 keyboard layout
     (let ((current (keyboard-type current)))
       (and (>= current 0)
            (begin

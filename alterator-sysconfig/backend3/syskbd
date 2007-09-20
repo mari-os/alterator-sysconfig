@@ -3,7 +3,7 @@
 . /usr/share/alterator/build/backend3.sh
 
 
-XKB_DATADIR=/etc/alterator/syskbd/data
+DATADIR=/etc/alterator/sysconfig/kbd
 
 KBD_CONFIG=/etc/sysconfig/keyboard
 XKB_CONFIG=/etc/X11/xinit/Xkbmap
@@ -14,14 +14,14 @@ on_message()
 		list)
 			local language=${in_language%%;*}
 			echo "("
-			[ -d "$XKB_DATADIR/$language" ] &&
-				find "$XKB_DATADIR/$language" -name '*.xkb'|
-					sed -r "s,$XKB_DATADIR/$language/([^/]+).xkb,(\"\1\"),"
+			[ -d "$DATADIR/$language" ] &&
+				find "$DATADIR/$language" -name '*.xkb'|
+					sed -r "s,$DATADIR/$language/([^/]+).xkb,(\"\1\"),"
 			echo ")"
 			;;
 		write)
 			local language=${in_language%%;*}
-			local path="$XKB_DATADIR/$language/$in__objects"
+			local path="$DATADIR/$language/$in__objects"
 			install -Dpm644 "$path.xkb" "$XKB_CONFIG" &&
 			install -Dpm644 "$path.kbd" "$KBD_CONFIG" &&
 			/usr/bin/setxkbmap -option "" &&
@@ -34,7 +34,4 @@ on_message()
 	esac
 }
 
-
 message_loop
-
-

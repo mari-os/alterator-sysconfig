@@ -1,4 +1,0 @@
-(include "*.map")
-
-(/ view /syskbd)
-(/std/frame view /std/base)

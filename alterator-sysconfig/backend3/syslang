@@ -1,0 +1,65 @@
+#!/bin/sh
+# ***** BEGIN LICENSE BLOCK *****
+# * Copyright (C) 2007  Alexey Gladkov <legion@altlinux.org>
+# *
+# * This program is free software; you can redistribute it and/or modify
+# * it under the terms of the GNU General Public License as published by
+# * the Free Software Foundation; either version 2 of the License, or
+# * (at your option) any later version.
+# *
+# * This program is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# * GNU General Public License for more details.
+# *
+# * You should have received a copy of the GNU General Public License
+# * along with this program; if not, write to the Free Software
+# * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+# ***** END LICENSE BLOCK *****
+
+. /usr/share/alterator/build/backend3.sh
+
+charset=UTF-8
+i18n_conf="/etc/sysconfig/i18n"
+rpm_installlangs="/etc/rpm/macros"
+langlist="/etc/alterator/sysconfig/lang/langlist"
+
+on_message()
+{
+        case "$in_action" in
+        	list)
+			local lang_file=
+			[ -n "$LANG" -a "$LANG" != "POSIX" -a "$LANG" != "C" ] &&
+				lang_file="$langlist.$(printf %s "$LANG" |
+						sed -r -e 's,[a-z]+_([^\.]+)(\..*)?,\1,' |
+						tr '[:upper:]' '[:lower:]')" ||
+				lang_file="$langlist.all"
+
+			[ -s "$lang_file" ] || lang_file="$langlist.all"
+
+			printf '('
+			while read locale desc; do
+				printf '("%s" description "%s") ' "$locale" "$desc"
+			done < "$lang_file"
+			printf ')'
+                        ;;
+		write)
+			mkdir -p -- "${i18n_conf%/*}"
+			local l lang
+			lang="$in_lang"
+			[ "$lang" != "POSIX" ] &&
+				l="$lang.$charset" ||
+				l="$lang"
+			echo "LANG=$l" > "$i18n_conf"
+			echo "SUPPORTED=$lang" >> "$i18n_conf"
+			[ "$lang" = "en_US" ] || lang="en_US:$lang"
+			echo "%_install_langs $lang" > "$rpm_installlangs"
+			echo '()'
+			;;
+		*)
+			echo '#f'
+			;;
+        esac
+}
+
+message_loop
