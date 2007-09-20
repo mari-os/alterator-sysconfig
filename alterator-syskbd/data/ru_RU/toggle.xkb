@@ -1,4 +1,4 @@
 -layout	us,ru
--option grp:toggle
+-option grp:toggle,grp:switch,compose:menu
 -variant ,winkeys
 

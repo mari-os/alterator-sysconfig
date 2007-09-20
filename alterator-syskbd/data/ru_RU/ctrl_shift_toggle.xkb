@@ -1,4 +1,4 @@
 -layout	us,ru
--option grp:ctrl_shift_toggle
+-option grp:ctrl_shift_toggle,grp:switch,compose:menu
 -variant ,winkeys
 
