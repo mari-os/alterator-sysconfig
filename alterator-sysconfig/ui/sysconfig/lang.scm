@@ -42,8 +42,8 @@
 	(let ()
 		(define-operation set-lang)
 		(set-lang (fluid-ref generic-session) (list (get-current-language)))
-		(with-translation _ "alterator-install2" (apply-button text (_ "OK")))
-		(with-translation _ "alterator-install2" (label-choose text (_ "Select your language")))))
+		(with-translation _ "alterator-sysconfig" (apply-button text (_ "OK")))
+		(with-translation _ "alterator-sysconfig" (label-choose text (_ "Select your language")))))
 
 (define (set-default-language)
 	(and-let* ((l (global 'language))

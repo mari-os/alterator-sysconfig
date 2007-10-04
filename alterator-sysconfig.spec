@@ -1,12 +1,15 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.3
+Version: 0.4
 Release: alt1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
 #save previous version in branch
+Conflicts: alterator-syskbd
+
+#replace previous version in branch
 #Provides: alterator-syskbd
 #Obsoletes: alterator-syskbd
 
@@ -48,6 +51,10 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Thu Oct 04 2007 Stanislav Ievlev <inger@altlinux.org> 0.4-alt1
+- add /sysconfig/language - separate language step
+- fix old /sysconfig/lang - wrong translation package
+
 * Thu Sep 20 2007 Stanislav Ievlev <inger@altlinux.org> 0.3-alt1
 - join together all basic system setup:
   console font, console and X11 keyboard layout, system locale
