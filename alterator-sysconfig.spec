@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.4
-Release: alt1
+Release: alt2
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -51,6 +51,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Mon Oct 29 2007 Stanislav Ievlev <inger@altlinux.org> 0.4-alt2
+- translate step list
+
 * Thu Oct 04 2007 Stanislav Ievlev <inger@altlinux.org> 0.4-alt1
 - add /sysconfig/language - separate language step
 - fix old /sysconfig/lang - wrong translation package

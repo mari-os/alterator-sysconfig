@@ -20,15 +20,24 @@
       (woo-write "/autoinstall/syslang" 'lang lang)
       (simple-notify document:root 'action "language" 'value lang)))))
 
+(define (label+icon x)
+  (cons (woo-get-option x 'label)
+        (woo-get-option x 'icon)))
+
 (define (change-translations)
   (define-operation set-lang)
   (set-lang (fluid-ref generic-session) (list (current-language)))
 
+  ;;wizardface specific hacks
   (with-translation _ "alterator-wizard"
                     (let ((wizard-id (global 'frame:wizard)))
+                      (wizard-id steps-clear)
+                      (wizard-id steps (map label+icon (woo-list "/step-list")))
+                      (wizard-id current-step 0)
                       (wizard-id action-remove 'forward)
                       (wizard-id action-add (vector 'forward (_ "Next")))))
-  
+
+  ;;common hacks
   (with-translation _ "alterator-sysconfig"
                     (label-choose text (_ "Select your language"))))
 
@@ -46,7 +55,7 @@
          
          ;; line
          (spacer)
-         (document:id langlist (listbox))
+         (document:id langlist (listbox (when selected (change-translations))))
          (spacer))
 
 ;;; Logic
@@ -62,6 +71,5 @@
        (cell-set! *languages* languages)
        (langlist rows (map cdr languages)
                  current (or (string-list-index default (map car languages))
-                             0)
-                 (when selected (change-translations)))
+                             0))
        (langlist selected))))))
