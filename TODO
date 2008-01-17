@@ -1,0 +1,14 @@
+https://bugzilla.altlinux.org/show_bug.cgi?id=14059
+
+- basic proxy setup:
+  http_proxy, https_proxy, ftp_proxy (usual naming)
+  HTTP_PROXY, HTTPS_PROXY, FTP_PROXY (for Konqueror)
+  in /etc/profile.d/proxy.sh
+
+- auth proxy setup (checkbox, login, password)
+
+- user/root setup (user: ~/.xsession.d/proxy?)
+
+- NTLM auth proxy option?
+
+- *.csh?

@@ -1,0 +1,45 @@
+# alterator-proxy
+# Copyright (C) 2008 Michael Shigorin
+# This file is distributed under the same license as the alterator-proxy package.
+# Michael Shigorin <mike@altlinux.org>, 2008
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-01-18 11:35+0200\n"
+"PO-Revision-Date: 2008-01-18 11:35+0300\n"
+"Last-Translator: Michael Shigorin <mike@altlinux.org>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ui/proxy/index.scm:9 backend3/proxy:84
+msgid "Proxy server"
+msgstr "Проксі-сервер"
+
+#: ui/proxy/index.scm:14 backend3/proxy:87
+msgid "Proxy port"
+msgstr "Порт проксі"
+
+#: ui/proxy/index.scm:21
+msgid "Apply"
+msgstr "Застосувати"
+
+#: ui/proxy/index.scm:22
+msgid "Reset"
+msgstr "Скинути"
+
+#: ui/proxy/index.scm:23
+msgid "Quit"
+msgstr "Вихід"
+
+#: backend3/proxy:84
+msgid "invalid proxy hostname"
+msgstr "некоректне ім'я хоста"
+
+#: backend3/proxy:86
+msgid "should be a number"
+msgstr "потрібне число"
