@@ -69,8 +69,13 @@ read_settings()
 
 write_settings()
 {
-	echo "export http_proxy=http://$in_server:$in_port/" >  "$SETTINGS"
-	echo "export  ftp_proxy=http://$in_server:$in_port/" >> "$SETTINGS"
+	touch "$SETTINGS"
+	shell_add_or_subst "export https_proxy=" "http://$in_server:$in_port/" "$SETTINGS"
+	shell_add_or_subst "export http_proxy=" "http://$in_server:$in_port/" "$SETTINGS"
+	shell_add_or_subst "export ftp_proxy=" "http://$in_server:$in_port/" "$SETTINGS"
+	shell_add_or_subst "export HTTPS_PROXY=" "http://$in_server:$in_port/" "$SETTINGS"
+	shell_add_or_subst "export HTTP_PROXY=" "http://$in_server:$in_port/" "$SETTINGS"
+	shell_add_or_subst "export FTP_PROXY=" "http://$in_server:$in_port/" "$SETTINGS"
 	chmod 0755 "$SETTINGS"
 	echo '()'
 }
