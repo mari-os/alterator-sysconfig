@@ -1,11 +1,11 @@
-https://bugzilla.altlinux.org/show_bug.cgi?id=14059
+see also https://bugzilla.altlinux.org/show_bug.cgi?id=14059
 
-- basic proxy setup:
+- basic proxy setup: [done]
   http_proxy, https_proxy, ftp_proxy (usual naming)
   HTTP_PROXY, HTTPS_PROXY, FTP_PROXY (for Konqueror)
   in /etc/profile.d/proxy.sh
 
-- auth proxy setup (checkbox, login, password)
+- auth proxy setup (login, password) [done]
 
 - user/root setup (user: ~/.xsession.d/proxy?)
 

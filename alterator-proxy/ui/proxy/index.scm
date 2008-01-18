@@ -3,58 +3,84 @@
 
 (document:envelop with-translation _ "alterator-proxy")
 
-(gridbox columns "20;40;60;20"
+(gridbox columns "10;80;10"
 	 ;;
 	 (spacer)
-	 (label (_ "Proxy server"))
-	 (document:id server (edit "" widget-name "server"))
+	 (groupbox (_ "Proxy")
+		   (gridbox columns "10;30;50;10"
+			    ;;
+			    (spacer)
+			    (label (_ "Server"))
+			    (document:id server (edit ""
+						      widget-name "server"
+						      tooltip (_ "Might be as simple as \"proxy\"")))
+			    (spacer)
+			    ;;
+			    (spacer)
+			    (label (_ "Port"))
+			    (document:id port (edit ""
+						    widget-name "port"
+						    tooltip (_ "Usual values are 3128 or 8080")))
+			    (spacer)))
 	 (spacer)
 	 ;;
-	 (spacer)
-	 (label (_ "Proxy port"))
-	 (document:id port (edit "" widget-name "port"))
-	 (spacer)
-	 )
 
-(hbox
-  align "center"
-  (document:id apply-button (button (_ "Apply")))
-  (document:id reset-button (button (_ "Reset")))
-  (document:id quit-button (button (_ "Quit") )))
+	 ;;
+	 (spacer)
+	 (groupbox (_ "Authentication")
+		   (gridbox columns "10;30;50;10"
+			    ;;
+			    (spacer)
+			    (label (_ "Login"))
+			    (document:id login (edit ""
+						     widget-name "login"
+						     tooltip (_ "Only needed for authenticated proxy")))
+			    (spacer)
+			    ;;
+			    (spacer)
+			    (label (_ "Password"))
+			    (document:id password (edit ""
+							echo stars
+							widget-name "password"
+							tooltip (_ "Makes sense with login")))
+			    (spacer)))
+	 (spacer)
+	 ;;
+	 (spacer)
+	 (gridbox columns "30;30;30"
+	   align "center"
+	   (document:id apply-button (button (_ "Apply")))
+	   (document:id reset-button (button (_ "Reset")))
+	   (document:id quit-button (button (_ "Quit") )))
+	 (spacer))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 (define (read-proxy)
   (let ((data (woo-read-first "/proxy" )))
     (server text (woo-get-option data 'server))
     (port text (woo-get-option data 'port))
-    ))
+    (login text (woo-get-option data 'login))
+    (password text (woo-get-option data 'password))))
 
-(define (write-proxy server port)
+(define (write-proxy)
   (woo-catch/message
     (thunk
-      (woo-write/constraints "/proxy"
-	     'server server
-	     'port port
-	     ))))
+	(woo-write/constraints "/proxy"
+			       'server (server text)
+			       'port (port text)
+			       'login (login text)
+			       'password (password text)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-(apply-button (when clicked
-		(let ((apply-server (server text))
-		      (apply-port (port text)))
-		  (if (and
-			(not-empty-string? apply-server)
-			(not-empty-string? apply-port))
-		    (write-proxy apply-server apply-port)))))
+(apply-button (when clicked (write-proxy)))
 
-(reset-button (when clicked
-		(read-proxy)))
+(reset-button (when clicked (read-proxy)))
 
-(quit-button (when clicked
-	       (document:end)))
+(quit-button (when clicked (document:end)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 (document:root
   (when loaded
     (read-proxy)
-    (update-constraints "write" "/net-pptp")))
+    (update-constraints "write" "/proxy")))
 

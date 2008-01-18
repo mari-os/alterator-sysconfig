@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 11:35+0200\n"
+"POT-Creation-Date: 2008-01-18 15:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,30 +16,62 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui/proxy/index.scm:9 backend3/proxy:84
-msgid "Proxy server"
+#: ui/proxy/index.scm:9
+msgid "Proxy"
 msgstr ""
 
-#: ui/proxy/index.scm:14 backend3/proxy:87
-msgid "Proxy port"
+#: ui/proxy/index.scm:13 backend3/proxy:103
+msgid "Server"
 msgstr ""
 
-#: ui/proxy/index.scm:21
-msgid "Apply"
+#: ui/proxy/index.scm:16
+msgid "Might be as simple as \"proxy\""
 msgstr ""
 
-#: ui/proxy/index.scm:22
-msgid "Reset"
+#: ui/proxy/index.scm:20 backend3/proxy:106
+msgid "Port"
 msgstr ""
 
 #: ui/proxy/index.scm:23
+msgid "Usual values are 3128 or 8080"
+msgstr ""
+
+#: ui/proxy/index.scm:30
+msgid "Authentication"
+msgstr ""
+
+#: ui/proxy/index.scm:34
+msgid "Login"
+msgstr ""
+
+#: ui/proxy/index.scm:37
+msgid "Only needed for authenticated proxy"
+msgstr ""
+
+#: ui/proxy/index.scm:41
+msgid "Password"
+msgstr ""
+
+#: ui/proxy/index.scm:45
+msgid "Makes sense with login"
+msgstr ""
+
+#: ui/proxy/index.scm:52
+msgid "Apply"
+msgstr ""
+
+#: ui/proxy/index.scm:53
+msgid "Reset"
+msgstr ""
+
+#: ui/proxy/index.scm:54
 msgid "Quit"
 msgstr ""
 
-#: backend3/proxy:84
+#: backend3/proxy:103
 msgid "invalid proxy hostname"
 msgstr ""
 
-#: backend3/proxy:86
+#: backend3/proxy:105
 msgid "should be a number"
 msgstr ""
