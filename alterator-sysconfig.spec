@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.4
-Release: alt2
+Version: 0.5
+Release: alt1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -51,6 +51,10 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Tue Jan 22 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt1
+- remove old /sysconfig/lang
+- add support for translation fallback
+
 * Mon Oct 29 2007 Stanislav Ievlev <inger@altlinux.org> 0.4-alt2
 - translate step list
 

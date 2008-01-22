@@ -22,6 +22,9 @@
 [ ! -f "/etc/sysconfig/i18n" ] ||
 	cp -af "/etc/sysconfig/i18n" "$destdir/etc/sysconfig/"
 
+[ ! -f "/etc/sysconfig/langmap" ] ||
+	cp -af "/etc/sysconfig/langmap" "$destdir/etc/sysconfig/"
+
 [ ! -f "/etc/sysconfig/consolefont" ] ||
 	cp -af "/etc/sysconfig/consolefont" "$destdir/etc/sysconfig/"
 

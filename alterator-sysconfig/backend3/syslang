@@ -20,9 +20,36 @@
 . /usr/share/alterator/build/backend3.sh
 
 charset=UTF-8
+
 i18n_conf="/etc/sysconfig/i18n"
-rpm_installlangs="/etc/rpm/macros"
+langmap_conf="/etc/sysconfig/langmap"
+rpm_conf="/etc/rpm/macros"
+
 langlist="/etc/alterator/sysconfig/lang/langlist"
+
+print_locale()
+{
+    local l="$1";shift
+    
+    [ "$l" != "POSIX" ] && echo "$l.$charset" || echo "$l"
+}
+
+print_install_langs()
+{
+    printf "%s" "$1" |
+	tr ' ' ':'
+}
+
+print_langmap()
+{
+    local languages="$1";shift
+    
+    for l in $languages; do
+	print_locale "$l"
+    done |
+	tr '\n' ':'|
+	sed 's,:$,,'
+}
 
 on_message()
 {
@@ -45,15 +72,21 @@ on_message()
                         ;;
 		write)
 			mkdir -p -- "${i18n_conf%/*}"
-			local l lang
-			lang="$in_lang"
-			[ "$lang" != "POSIX" ] &&
-				l="$lang.$charset" ||
-				l="$lang"
-			echo "LANG=$l" > "$i18n_conf"
-			echo "SUPPORTED=$lang" >> "$i18n_conf"
-			[ "$lang" = "en_US" ] || lang="en_US:$lang"
-			echo "%_install_langs $lang" > "$rpm_installlangs"
+			mkdir -p -- "${langmap_conf%/*}"
+			mkdir -p -- "${rpm_conf%/*}"
+
+			local firstlang="${in_lang%%;*}"
+			local languages="$(printf '%s' "$in_lang" |tr ';' ' ')"
+
+			printf 'LANG=%s\n' "$(print_locale "$firstlang")">"$i18n_conf"
+			printf 'SUPPORTED=%s\n' "$(print_langmap "$languages")">>"$i18n_conf"
+
+			echo "$in_lang" | fgrep -qs ';' &&
+			    printf '%s\n' "$(print_langmap "$languages")">"$langmap_conf"
+
+			[ "$firstlang" = "en_US" ] || languages="en_US $languages"
+			printf '%%__install_langs %s\n' "$(print_install_langs "$languages")">"$rpm_conf"
+
 			echo '()'
 			;;
 		*)

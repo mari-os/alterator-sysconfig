@@ -10,7 +10,7 @@
 (define *languages* (make-cell '()))
 
 (define (current-language)
-  (car (list-ref (cell-ref *languages*) (langlist current))))
+  (string-cut (car (list-ref (cell-ref *languages*) (langlist current))) #\:))
 
 (define (write-language)
   (woo-catch/message
@@ -26,7 +26,7 @@
 
 (define (change-translations)
   (define-operation set-lang)
-  (set-lang (fluid-ref generic-session) (list (current-language)))
+  (set-lang (fluid-ref generic-session) (current-language))
 
   ;;wizardface specific hacks
   (with-translation _ "alterator-wizard"
