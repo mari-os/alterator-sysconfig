@@ -1,4 +1,4 @@
 uk_UA	Українська
-ru_RU	Російська
+ru_UA	Російська
 en_US	Англійська
 POSIX	POSIX

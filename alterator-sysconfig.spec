@@ -2,7 +2,9 @@
 
 Name: alterator-sysconfig
 Version: 0.5
-Release: alt1
+Release: alt2
+
+Requires: alterator-sh-functions
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -45,12 +47,20 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 %files -f %name.lang
 %_sysconfdir/alterator/sysconfig
-%_altdata_dir/ui/*/
+%_datadir/alterator/ui/*/
+%_datadir/alterator/help/*/*
 %_alterator_backend3dir/*
 %_datadir/install2/preinstall.d/*
 
 
 %changelog
+* Wed Jan 30 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt2
+- use alterator-sh-functions
+- add help from installer
+- don't setup rpm_install_langs
+- add uk_UA to langlist.ru
+- rename ru_RU to ru_UA in langlist.uk
+
 * Tue Jan 22 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt1
 - remove old /sysconfig/lang
 - add support for translation fallback

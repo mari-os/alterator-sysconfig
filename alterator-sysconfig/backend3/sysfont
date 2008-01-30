@@ -1,7 +1,6 @@
 #!/bin/sh
 
-. /usr/share/alterator/build/backend3.sh
-
+. alterator-sh-functions
 
 DATADIR=/etc/alterator/sysconfig/
 CONFIGDIR=/etc/sysconfig/
@@ -12,7 +11,7 @@ on_message()
 		write)
 			#TODO: use language information
 			cp -af "$DATADIR/consolefont" "$CONFIGDIR/consolefont"
-			echo "()"
+			write_nop
 			;;
 		*)
 			echo '#f'

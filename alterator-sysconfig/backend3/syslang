@@ -1,54 +1,19 @@
 #!/bin/sh
-# ***** BEGIN LICENSE BLOCK *****
-# * Copyright (C) 2007  Alexey Gladkov <legion@altlinux.org>
-# *
-# * This program is free software; you can redistribute it and/or modify
-# * it under the terms of the GNU General Public License as published by
-# * the Free Software Foundation; either version 2 of the License, or
-# * (at your option) any later version.
-# *
-# * This program is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# * GNU General Public License for more details.
-# *
-# * You should have received a copy of the GNU General Public License
-# * along with this program; if not, write to the Free Software
-# * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
-# ***** END LICENSE BLOCK *****
 
-. /usr/share/alterator/build/backend3.sh
-
-charset=UTF-8
+. alterator-sh-functions
 
 i18n_conf="/etc/sysconfig/i18n"
 langmap_conf="/etc/sysconfig/langmap"
 rpm_conf="/etc/rpm/macros"
 
 langlist="/etc/alterator/sysconfig/lang/langlist"
+po_charset="UTF-8"
 
-print_locale()
+write_locale()
 {
     local l="$1";shift
-    
-    [ "$l" != "POSIX" ] && echo "$l.$charset" || echo "$l"
-}
 
-print_install_langs()
-{
-    printf "%s" "$1" |
-	tr ' ' ':'
-}
-
-print_langmap()
-{
-    local languages="$1";shift
-    
-    for l in $languages; do
-	print_locale "$l"
-    done |
-	tr '\n' ':'|
-	sed 's,:$,,'
+    [ "$l" != "POSIX" ] && echo "$l.$po_charset" || echo "$l"
 }
 
 on_message()
@@ -56,11 +21,11 @@ on_message()
         case "$in_action" in
         	list)
 			local lang_file=
-			[ -n "$LANG" -a "$LANG" != "POSIX" -a "$LANG" != "C" ] &&
+			if [ -n "$LANG" -a "$LANG" != "POSIX" -a "$LANG" != "C" ]; then
 				lang_file="$langlist.$(printf %s "$LANG" |
 						sed -r -e 's,[a-z]+_([^\.]+)(\..*)?,\1,' |
-						tr '[:upper:]' '[:lower:]')" ||
-				lang_file="$langlist.all"
+						tr '[:upper:]' '[:lower:]')"
+			fi
 
 			[ -s "$lang_file" ] || lang_file="$langlist.all"
 
@@ -76,18 +41,19 @@ on_message()
 			mkdir -p -- "${rpm_conf%/*}"
 
 			local firstlang="${in_lang%%;*}"
-			local languages="$(printf '%s' "$in_lang" |tr ';' ' ')"
 
-			printf 'LANG=%s\n' "$(print_locale "$firstlang")">"$i18n_conf"
-			printf 'SUPPORTED=%s\n' "$(print_langmap "$languages")">>"$i18n_conf"
+			printf 'LANG=%s\n' "$(write_locale "$firstlang")">"$i18n_conf"
 
-			echo "$in_lang" | fgrep -qs ';' &&
-			    printf '%s\n' "$(print_langmap "$languages")">"$langmap_conf"
+			if echo "$in_language" | fgrep -qs ';'; then
+			    printf 'SUPPORTED=%s\n' "$(write_language "$in_language")">>"$i18n_conf"
+			    printf '%s\n' "$(write_language "$in_language")">"$langmap_conf"
+			else
+			    printf 'SUPPORTED=%s\n' "$(write_locale "$firstlang")">>"$i18n_conf"
+			fi
+			
+			sed 's,^%_install_langs[[:space:]].*,%_install_langs all,' -i "$rpm_conf"
 
-			[ "$firstlang" = "en_US" ] || languages="en_US $languages"
-			printf '%%__install_langs %s\n' "$(print_install_langs "$languages")">"$rpm_conf"
-
-			echo '()'
+			write_nop
 			;;
 		*)
 			echo '#f'
