@@ -2,18 +2,14 @@
 
 Name: alterator-sysconfig
 Version: 0.5
-Release: alt2
+Release: alt3
 
 Requires: alterator-sh-functions
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
-#save previous version in branch
-Conflicts: alterator-syskbd
-
-#replace previous version in branch
-#Provides: alterator-syskbd
-#Obsoletes: alterator-syskbd
+Provides: alterator-syskbd = %version
+Obsoletes: alterator-syskbd
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -54,6 +50,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Wed Mar 12 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt3
+- provides/obsoletes alterator-syskbd
+
 * Wed Jan 30 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt2
 - use alterator-sh-functions
 - add help from installer
