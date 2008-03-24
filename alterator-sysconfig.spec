@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.5
-Release: alt3
+Release: alt4
 
 Requires: alterator-sh-functions
 
@@ -50,6 +50,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Mon Mar 24 2008 Vladislav Zavjalov <slazav@altlinux.org> 0.5-alt4
+- remove layout-policy attribute (bug #14945)
+
 * Wed Mar 12 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt3
 - provides/obsoletes alterator-syskbd
 

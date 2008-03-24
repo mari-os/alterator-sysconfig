@@ -45,7 +45,6 @@
   max-height 200
   (label (_ "Please select keyboard switch type"))
   (document:id keyboard-type (listbox
-                              layout-policy 100 -2
                               max-width 300
                               rows (map get-name keyboards)
                               (and (> (length keyboards) 0) (current 0)))))
