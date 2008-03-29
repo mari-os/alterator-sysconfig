@@ -1,0 +1,2 @@
+* ui: implement "disable proxy" checkbox which would
+  comment out (but not clear or remove) the config
