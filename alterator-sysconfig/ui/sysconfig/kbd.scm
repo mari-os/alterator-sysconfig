@@ -22,43 +22,41 @@
 (define (get-name item)
   (cond-assoc item keyboard-names item))
 
-(define (apply-keyboard)
-  (woo-catch
-   (thunk
-    ;;save console font
-    (woo-write "/sysfont")
-    (woo-write "/autoinstall/sysfont")
-    ;;save console and X11 keyboard layout
-    (let ((current (keyboard-type current)))
-      (and (>= current 0)
-           (begin
-             (woo-write (string-append "/syskbd/" (list-ref keyboards current)))
-             (woo-write (string-append "/autoinstall/syskbd/" (list-ref keyboards current))))))
-    #t)
-   (lambda(reason) #f)))
+(define (write-keyboard)
+  (woo-catch/message
+    (thunk
+      ;;save console font
+      (woo-write "/sysfont")
+      (woo-write "/autoinstall/sysfont")
+      ;;save console and X11 keyboard layout
+      (let ((current (keyboard-type current)))
+	(and (>= current 0)
+	     (begin
+	       (woo-write (string-append "/syskbd/" (list-ref keyboards current)))
+	       (woo-write (string-append "/autoinstall/syskbd/" (list-ref keyboards current))))))
+      #t)))
 
 ;;;;;;;;;;;;
 
-(hbox
- (spacer)
- (vbox
-  max-height 200
+(gridbox
+  columns "30;40;30"
+  ;;
+  (spacer)
   (label (_ "Please select keyboard switch type"))
+  (spacer)
+  ;;
+  (spacer)
   (document:id keyboard-type (listbox
-                              max-width 300
-                              rows (map get-name keyboards)
-                              (and (> (length keyboards) 0) (current 0)))))
- (spacer))
+			       rows (map get-name keyboards)
+			       (and (> (length keyboards) 0) (current 0))
+			       (when double-clicked (frame:next))))
+  (spacer))
 
-(frame:on-next apply-keyboard)
+(frame:on-next (thunk (or (write-keyboard) 'cancel)))
 
-(define (skip-step)
-  (if (eq? (global 'frame:direction) 'next)
-      (frame:next)
-      (frame:back)))
 
 (document:root (when loaded
                  (let ((len (length keyboards)))
-                   (and (= len 1) (apply-keyboard))
-                   (and (<= len 1) (skip-step)))))
+                   (and (= len 1) (write-keyboard))
+                   (and (<= len 1) (frame:skip)))))
 

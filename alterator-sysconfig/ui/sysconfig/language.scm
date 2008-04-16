@@ -18,7 +18,8 @@
     (let ((lang (current-language)))
       (woo-write "/syslang" 'lang lang)
       (woo-write "/autoinstall/syslang" 'lang lang)
-      (simple-notify document:root 'action "language" 'value lang)))))
+      (simple-notify document:root 'action "language" 'value lang)
+      #t))))
 
 (define (label+icon x)
   (cons (woo-get-option x 'label)
@@ -34,8 +35,7 @@
                       (wizard-id steps-clear)
                       (wizard-id steps (map label+icon (woo-list "/step-list")))
                       (wizard-id current-step 0)
-                      (wizard-id action-remove 'forward)
-                      (wizard-id action-add (vector 'forward (_ "Next")))))
+                      (wizard-id action-text 'forward (_ "Next"))))
 
   ;;common hacks
   (with-translation _ "alterator-sysconfig"
@@ -47,20 +47,25 @@
 
 ;;; UI
 
-(gridbox columns "30;40;30"
-         ;; line
-         (spacer)
-         (document:id label-choose (label "Select your language"))
-         (spacer)
-         
-         ;; line
-         (spacer)
-         (document:id langlist (listbox (when selected (change-translations))))
-         (spacer))
+(gridbox
+  columns "30;40;30"
+  ;;
+  (spacer)
+  (document:id label-choose (label "Select your language"))
+  (spacer)
+
+  ;;
+  (spacer)
+  (document:id langlist
+	       (listbox (when selected
+			  (change-translations))
+			(when double-clicked
+			  (frame:next))))
+  (spacer))
 
 ;;; Logic
 
-(frame:on-next write-language)
+(frame:on-next (thunk (or (write-language) 'cancel)))
 
 (document:root
  (when loaded

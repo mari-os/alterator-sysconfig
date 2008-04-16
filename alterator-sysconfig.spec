@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.5
-Release: alt4
+Release: alt5
 
 Requires: alterator-sh-functions
 
@@ -21,6 +21,7 @@ Summary: alterator module for basic system settings
 License: GPL
 Group: System/Configuration/Other
 Requires: alterator >= 2.9, control >= 0.7.1-alt1
+Conflicts: alterator-lookout < 0.7-alt2
 
 BuildPreReq: alterator >= 2.9-alt0.10, alterator-standalone >= 2.5-alt0.3
 
@@ -50,6 +51,10 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Wed Apr 16 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt5
+- go next on double click (#11000)
+- fix focus jump (#14682)
+
 * Mon Mar 24 2008 Vladislav Zavjalov <slazav@altlinux.org> 0.5-alt4
 - remove layout-policy attribute (bug #14945)
 
