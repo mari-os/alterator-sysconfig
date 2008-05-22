@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.5
-Release: alt5
+Version: 0.6
+Release: alt1
 
 Requires: alterator-sh-functions
 
@@ -51,6 +51,12 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %changelog
+* Thu May 22 2008 Stanislav Ievlev <inger@altlinux.org> 0.6-alt1
+- add help for language step
+- remove 'POSIX'
+- remove autoinstall backend usage
+- translate both 'Next' and 'Help' buttons
+
 * Wed Apr 16 2008 Stanislav Ievlev <inger@altlinux.org> 0.5-alt5
 - go next on double click (#11000)
 - fix focus jump (#14682)

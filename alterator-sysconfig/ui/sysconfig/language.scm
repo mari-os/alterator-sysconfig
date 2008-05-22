@@ -17,7 +17,6 @@
    (thunk
     (let ((lang (current-language)))
       (woo-write "/syslang" 'lang lang)
-      (woo-write "/autoinstall/syslang" 'lang lang)
       (simple-notify document:root 'action "language" 'value lang)
       #t))))
 
@@ -35,6 +34,7 @@
                       (wizard-id steps-clear)
                       (wizard-id steps (map label+icon (woo-list "/step-list")))
                       (wizard-id current-step 0)
+                      (wizard-id action-text 'help (_ "Help"))
                       (wizard-id action-text 'forward (_ "Next"))))
 
   ;;common hacks

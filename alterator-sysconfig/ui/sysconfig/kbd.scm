@@ -27,13 +27,11 @@
     (thunk
       ;;save console font
       (woo-write "/sysfont")
-      (woo-write "/autoinstall/sysfont")
       ;;save console and X11 keyboard layout
       (let ((current (keyboard-type current)))
 	(and (>= current 0)
 	     (begin
-	       (woo-write (string-append "/syskbd/" (list-ref keyboards current)))
-	       (woo-write (string-append "/autoinstall/syskbd/" (list-ref keyboards current))))))
+	       (woo-write (string-append "/syskbd/" (list-ref keyboards current))))))
       #t)))
 
 ;;;;;;;;;;;;
