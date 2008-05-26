@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.7
-Release: alt1
+Release: alt2
 
 Requires: alterator-sh-functions
 
@@ -27,7 +27,7 @@ Conflicts: alterator-wizardface < 0.5-alt7
 BuildPreReq: alterator >= 3.2-alt6
 
 # Automatically added by buildreq on Mon Jul 11 2005 (-bi)
-BuildRequires: alterator
+BuildRequires: alterator, alterator-l10n
 
 %description
 alterator module for basic system settings ( console and X11 keyboard, console font, system locale)
@@ -51,6 +51,10 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Mon May 26 2008 Stanislav Ievlev <inger@altlinux.org> 0.7-alt2
+- join to common translation datebase
+- improve ui layout
+
 * Mon May 26 2008 Stanislav Ievlev <inger@altlinux.org> 0.7-alt1
 - use enumref
 - improve UI according common alterator HIG
