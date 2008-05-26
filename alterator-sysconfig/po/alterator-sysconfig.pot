@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-20 12:14+0400\n"
+"POT-Creation-Date: 2008-05-26 14:30+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,46 +16,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui/sysconfig/lang.scm:45
-msgid "OK"
+#: ui/sysconfig/kbd.scm:20
+msgid "Please select keyboard switch type:"
 msgstr ""
 
-#: ui/sysconfig/lang.scm:46
-msgid "Select your language"
+#: ui/sysconfig/language.scm:32
+msgid "Help"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:7
+#: ui/sysconfig/language.scm:33
+msgid "Next"
+msgstr ""
+
+#: ui/sysconfig/language.scm:37
+msgid "Select your language:"
+msgstr ""
+
+#: backend3/syskbd:14
 msgid "Alt+Shift key"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:8
+#: backend3/syskbd:15
 msgid "CapsLock key"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:9
+#: backend3/syskbd:16
 msgid "Control+Shift keys"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:10
+#: backend3/syskbd:17
 msgid "Control key"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:11
+#: backend3/syskbd:18
 msgid "Alt key"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:12
-msgid "Control+Shift keys, UK,RU,EN"
+#: backend3/syskbd:19
+msgid "Control+Shift keys (UK,RU,EN)"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:13
+#: backend3/syskbd:20
 msgid "Default"
 msgstr ""
 
-#: ui/sysconfig/kbd.scm:14
+#: backend3/syskbd:21 backend3/syskbd:22
 msgid "Without dead keys"
-msgstr ""
-
-#: ui/sysconfig/kbd.scm:46
-msgid "Please select keyboard switch type"
 msgstr ""

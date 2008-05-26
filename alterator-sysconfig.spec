@@ -1,7 +1,7 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.6
+Version: 0.7
 Release: alt1
 
 Requires: alterator-sh-functions
@@ -20,10 +20,11 @@ Source:%name-%version.tar
 Summary: alterator module for basic system settings
 License: GPL
 Group: System/Configuration/Other
-Requires: alterator >= 2.9, control >= 0.7.1-alt1
-Conflicts: alterator-lookout < 0.7-alt2
+Requires: alterator >= 3.2-alt6
+Conflicts: alterator-lookout < 0.9-alt5
+Conflicts: alterator-wizardface < 0.5-alt7
 
-BuildPreReq: alterator >= 2.9-alt0.10, alterator-standalone >= 2.5-alt0.3
+BuildPreReq: alterator >= 3.2-alt6
 
 # Automatically added by buildreq on Mon Jul 11 2005 (-bi)
 BuildRequires: alterator
@@ -49,8 +50,12 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_alterator_backend3dir/*
 %_datadir/install2/preinstall.d/*
 
-
 %changelog
+* Mon May 26 2008 Stanislav Ievlev <inger@altlinux.org> 0.7-alt1
+- use enumref
+- improve UI according common alterator HIG
+- minor bugfixes
+
 * Thu May 22 2008 Stanislav Ievlev <inger@altlinux.org> 0.6-alt1
 - add help for language step
 - remove 'POSIX'

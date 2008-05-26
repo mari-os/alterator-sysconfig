@@ -29,11 +29,9 @@ on_message()
 
 			[ -s "$lang_file" ] || lang_file="$langlist.all"
 
-			printf '('
-			while read locale desc; do
-				printf '("%s" description "%s") ' "$locale" "$desc"
-			done < "$lang_file"
-			printf ')'
+			echo '('
+			write_enum_item <"$lang_file"
+			echo ')'
                         ;;
 		write)
 			mkdir -p -- "${i18n_conf%/*}"

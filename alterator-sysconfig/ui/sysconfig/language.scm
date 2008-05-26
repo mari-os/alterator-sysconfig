@@ -3,19 +3,14 @@
 
 ;;; Helpers
 
-(define (name+description x)
-  (cons (woo-get-option x 'name)
-        (woo-get-option x 'description)))
-
-(define *languages* (make-cell '()))
-
 (define (current-language)
-  (string-cut (car (list-ref (cell-ref *languages*) (langlist current))) #\:))
+  (and-let* ((l (langlist value)))
+    (string-cut l #\:)))
 
 (define (write-language)
   (woo-catch/message
    (thunk
-    (let ((lang (current-language)))
+    (and-let* ((lang (current-language)))
       (woo-write "/syslang" 'lang lang)
       (simple-notify document:root 'action "language" 'value lang)
       #t))))
@@ -39,11 +34,11 @@
 
   ;;common hacks
   (with-translation _ "alterator-sysconfig"
-                    (label-choose text (_ "Select your language"))))
+                    (label-choose text (_ "Select your language:"))))
 
 (define (default-language)
   (define-operation get-lang)
-  (car (get-lang (fluid-ref generic-session))))
+  (string-join (get-lang (fluid-ref generic-session)) ":"))
 
 ;;; UI
 
@@ -51,7 +46,7 @@
   columns "30;40;30"
   ;;
   (spacer)
-  (document:id label-choose (label "Select your language"))
+  (document:id label-choose (label "Select your language:"))
   (spacer)
 
   ;;
@@ -71,10 +66,6 @@
  (when loaded
    (woo-catch/message
     (thunk
-     (let ((languages (map name+description (woo-list "/syslang")))
-           (default (default-language)))
-       (cell-set! *languages* languages)
-       (langlist rows (map cdr languages)
-                 current (or (string-list-index default (map car languages))
-                             0))
-       (langlist selected))))))
+      (langlist enumref "/syslang"
+                value (default-language)
+                selected)))))

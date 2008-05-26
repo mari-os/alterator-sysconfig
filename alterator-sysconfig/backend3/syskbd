@@ -1,11 +1,36 @@
 #!/bin/sh
 
+po_domain="alterator-sysconfig"
 . alterator-sh-functions
 
 DATADIR=/etc/alterator/sysconfig/kbd
 
 KBD_CONFIG=/etc/sysconfig/keyboard
 XKB_CONFIG=/etc/X11/xinit/Xkbmap
+
+write_layout()
+{
+    case "$1" in
+	alt_sh_toggle) echo "`_ "Alt+Shift key"`";;
+	caps_toggle) echo "`_ "CapsLock key"`";;
+	ctrl_shift_toggle) echo "`_ "Control+Shift keys"`";;
+	ctrl_toggle) echo "`_ "Control key"`";;
+        toggle) echo "`_ "Alt key"`";;
+	ctrl_shift_toggle_ru_ua) echo "`_ "Control+Shift keys (UK,RU,EN)"`";;
+        default) echo "`_ "Default"`";;
+        nodeadkeys) echo "`_ "Without dead keys"`";;
+        *) echo "`_ "Without dead keys"`";;
+    esac
+}
+
+write_kbd()
+{
+    while read name;do
+	name="${name##*/}"
+        name="${name%%.xkb}"
+	write_enum_item "$name" "$(write_layout "$name")"
+    done
+}
 
 on_message()
 {
@@ -14,13 +39,12 @@ on_message()
 			local language=${in_language%%;*}
 			echo "("
 			[ -d "$DATADIR/$language" ] &&
-				find "$DATADIR/$language" -name '*.xkb'|
-					sed -r "s,$DATADIR/$language/([^/]+).xkb,(\"\1\"),"
+				find "$DATADIR/$language" -name '*.xkb'|write_kbd
 			echo ")"
 			;;
 		write)
 			local language=${in_language%%;*}
-			local path="$DATADIR/$language/$in__objects"
+			local path="$DATADIR/$language/$in_layout"
 			install -Dpm644 "$path.xkb" "$XKB_CONFIG" &&
 			install -Dpm644 "$path.kbd" "$KBD_CONFIG" &&
 			/usr/bin/setxkbmap -option "" &&
