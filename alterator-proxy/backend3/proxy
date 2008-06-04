@@ -3,8 +3,8 @@
 DEBUG=1
 MODULE=`basename $0`
 
-#SETTINGS=/etc/profile.d/proxy.sh
-SETTINGS=$HOME/wrk/alterator/alterator-proxy/alterator-proxy/proxy.sh
+SETTINGS=/etc/profile.d/proxy.sh
+#SETTINGS=$HOME/wrk/alterator/alterator-proxy/alterator-proxy/proxy.sh
 
 VARS="https_proxy http_proxy ftp_proxy HTTPS_PROXY HTTP_PROXY FTP_PROXY"
 DISA="disabled_login disabled_password disabled_server disabled_port"
