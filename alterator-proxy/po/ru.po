@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 15:59+0200\n"
+"POT-Creation-Date: 2008-06-04 17:17+0300\n"
 "PO-Revision-Date: 2008-01-18 16:02+0300\n"
 "Last-Translator: Michael Shigorin <mike@altlinux.org>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -16,62 +16,75 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui/proxy/index.scm:9
+#: ui/proxy/index.scm:12
+msgid "Enabled"
+msgstr ""
+
+#: ui/proxy/index.scm:14
+#, fuzzy
+msgid "Might be enable or disable \"proxy\""
+msgstr "Может оказаться просто \"proxy\""
+
+#: ui/proxy/index.scm:26
 msgid "Proxy"
 msgstr "Прокси"
 
-#: ui/proxy/index.scm:13 backend3/proxy:103
+#: ui/proxy/index.scm:30 backend3/proxy:172
 msgid "Server"
 msgstr "Сервер"
 
-#: ui/proxy/index.scm:16
+#: ui/proxy/index.scm:34
 msgid "Might be as simple as \"proxy\""
 msgstr "Может оказаться просто \"proxy\""
 
-#: ui/proxy/index.scm:20 backend3/proxy:106
+#: ui/proxy/index.scm:41 backend3/proxy:175
 msgid "Port"
 msgstr "Порт"
 
-#: ui/proxy/index.scm:23
+#: ui/proxy/index.scm:45
 msgid "Usual values are 3128 or 8080"
 msgstr "Обычные значения: 3128 или 8080"
 
-#: ui/proxy/index.scm:30
+#: ui/proxy/index.scm:53
 msgid "Authentication"
 msgstr "Авторизация"
 
-#: ui/proxy/index.scm:34
+#: ui/proxy/index.scm:57 backend3/proxy:178
 msgid "Login"
 msgstr "Логин"
 
-#: ui/proxy/index.scm:37
+#: ui/proxy/index.scm:61
 msgid "Only needed for authenticated proxy"
 msgstr "Требуется только при авторизации"
 
-#: ui/proxy/index.scm:41
+#: ui/proxy/index.scm:68
 msgid "Password"
 msgstr "Пароль"
 
-#: ui/proxy/index.scm:45
+#: ui/proxy/index.scm:73
 msgid "Makes sense with login"
 msgstr "Имеет смысл только с паролем"
 
-#: ui/proxy/index.scm:52
+#: ui/proxy/index.scm:84
 msgid "Apply"
 msgstr "Применить"
 
-#: ui/proxy/index.scm:53
+#: ui/proxy/index.scm:85
 msgid "Reset"
 msgstr "Сброс"
 
-#: ui/proxy/index.scm:54
+#: ui/proxy/index.scm:86
 msgid "Quit"
 msgstr "Выход"
 
-#: backend3/proxy:103
+#: backend3/proxy:171
 msgid "invalid proxy hostname"
 msgstr "некорректное имя хоста"
 
-#: backend3/proxy:105
+#: backend3/proxy:174
 msgid "should be a number"
 msgstr "требуется число"
+
+#: backend3/proxy:177
+msgid "only small latin letters, digits and '_' allowed"
+msgstr ""
