@@ -89,11 +89,6 @@ write_settings()
 	for var in $VARS; do
 		shell_add_or_subst "export $var=" "$PROXY" "$SETTINGS"
 	done
-
-	if [ "$in_server" = "" ] && [ "$in_portr" = "" ] && [ "$in_login" = "" ] && [ "$in_password" = "" ]; then
-		echo > "$SETTINGS"
-	fi
-
 	chmod 0755 "$SETTINGS"
 
 	echo '()'
@@ -102,18 +97,14 @@ write_settings()
 
 constraints()
 {
-	if [ "$in_server" = "" ] && [ "$in_portr" = "" ] && [ "$in_login" = "" ] && [ "$in_password" = "" ]; then
-		echo "#t"
-	else
-		local required="$([ "$in_orig_action" = "new" ] && echo "#t" || echo "#f")"
-		echo '('
-		printf 'server (required #t match ("^[[:alnum:].-]+$" "%s") label "%s")' \
-		"`_ "invalid proxy hostname"`" "`_ "Server"`"
-		printf 'port  (required #t match ("^[0-9]+$"  "%s")  default "3128" label "%s")' \
-		"`_ "should be a number"`" \
-		"`_ "Port"`"
-		echo ')'
-	fi
+	local required="$([ "$in_orig_action" = "new" ] && echo "#t" || echo "#f")"
+	echo '('
+	printf 'server (required #t match ("^[[:alnum:].-]+$" "%s") label "%s")' \
+	"`_ "invalid proxy hostname"`" "`_ "Server"`"
+	printf 'port  (required #t match ("^[0-9]+$"  "%s")  default "3128" label "%s")' \
+	"`_ "should be a number"`" \
+	"`_ "Port"`"
+	echo ')'
 }
 
 _()
