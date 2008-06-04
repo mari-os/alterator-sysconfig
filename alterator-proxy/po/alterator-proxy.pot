@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 15:59+0200\n"
+"POT-Creation-Date: 2008-06-04 17:17+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,62 +16,74 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui/proxy/index.scm:9
+#: ui/proxy/index.scm:12
+msgid "Enabled"
+msgstr ""
+
+#: ui/proxy/index.scm:14
+msgid "Might be enable or disable \"proxy\""
+msgstr ""
+
+#: ui/proxy/index.scm:26
 msgid "Proxy"
 msgstr ""
 
-#: ui/proxy/index.scm:13 backend3/proxy:103
+#: ui/proxy/index.scm:30 backend3/proxy:172
 msgid "Server"
 msgstr ""
 
-#: ui/proxy/index.scm:16
+#: ui/proxy/index.scm:34
 msgid "Might be as simple as \"proxy\""
 msgstr ""
 
-#: ui/proxy/index.scm:20 backend3/proxy:106
+#: ui/proxy/index.scm:41 backend3/proxy:175
 msgid "Port"
 msgstr ""
 
-#: ui/proxy/index.scm:23
+#: ui/proxy/index.scm:45
 msgid "Usual values are 3128 or 8080"
 msgstr ""
 
-#: ui/proxy/index.scm:30
+#: ui/proxy/index.scm:53
 msgid "Authentication"
 msgstr ""
 
-#: ui/proxy/index.scm:34
+#: ui/proxy/index.scm:57 backend3/proxy:178
 msgid "Login"
 msgstr ""
 
-#: ui/proxy/index.scm:37
+#: ui/proxy/index.scm:61
 msgid "Only needed for authenticated proxy"
 msgstr ""
 
-#: ui/proxy/index.scm:41
+#: ui/proxy/index.scm:68
 msgid "Password"
 msgstr ""
 
-#: ui/proxy/index.scm:45
+#: ui/proxy/index.scm:73
 msgid "Makes sense with login"
 msgstr ""
 
-#: ui/proxy/index.scm:52
+#: ui/proxy/index.scm:84
 msgid "Apply"
 msgstr ""
 
-#: ui/proxy/index.scm:53
+#: ui/proxy/index.scm:85
 msgid "Reset"
 msgstr ""
 
-#: ui/proxy/index.scm:54
+#: ui/proxy/index.scm:86
 msgid "Quit"
 msgstr ""
 
-#: backend3/proxy:103
+#: backend3/proxy:171
 msgid "invalid proxy hostname"
 msgstr ""
 
-#: backend3/proxy:105
+#: backend3/proxy:174
 msgid "should be a number"
+msgstr ""
+
+#: backend3/proxy:177
+msgid "only small latin letters, digits and '_' allowed"
 msgstr ""
