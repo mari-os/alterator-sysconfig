@@ -1,143 +1,188 @@
 #!/bin/sh -ef
-SETTINGS=/etc/profile.d/proxy.sh
+
+. shell-quote
+. alterator-sh-functions
+. alterator-sh-debug
+
+# DEBUG="on"
+
+if [ -n "$DEBUG" ]; then
+	SETTINGS=$HOME/tmp/proxy.sh
+else
+	SETTINGS=/etc/profile.d/proxy.sh
+fi
+
 VARS="https_proxy http_proxy ftp_proxy HTTPS_PROXY HTTP_PROXY FTP_PROXY"
+DISA="disabled_login disabled_password disabled_server disabled_port"
 #DEFPORT=3128
 
-################### shell file helpers
+## shell file helpers ##################################################
 
-shell_add_or_subst()
-{
+#-----------------------------------------------------------------------
+shell_add_or_subst() {
+	deb_caller "$@"
 	local name="$1" && shift
 	local value="$1" && shift
 	local file="$1" && shift
 
 	[ -f "$file" ] || touch "$file"
 	if grep -qs "^$name" "$file"; then
-		/bin/sed -r -i "s,^$name.*,$name$value," -- "$file"
+		sed -r -i "s,^$name.*,$name\"$value\"," -- "$file"
 		return 0
 	fi
-	echo "$name$value" >> "$file"
+	echo "$name\"$value\"" >> "$file"
 }
 
-################### debug
+## PROXY SETTINGS HELPERS ##############################################
 
-debug()
-{
-	[ -n "$DEBUG" ] && echo $* >&2
-}
-
-################### should also be a library function
-
-nop()  { echo '()'; }
-nope() { echo '#f'; }
-
-################### proxy settings helpers
-
-read_settings()
-{
-	local https_proxy=
-	local  http_proxy=
-	local   ftp_proxy=
-	local HTTPS_PROXY=
-	local  HTTP_PROXY=
-	local   FTP_PROXY=
-
-	local server=
-	local port=
-	local login=
-	local password=
-	
+#-----------------------------------------------------------------------
+read_settings() {
+	deb_caller "$@"
 	# SourceIfNotEmpty...
 	[ -s "$SETTINGS" -a -x "$SETTINGS" ] && . "$SETTINGS"
 
-	# fallbacks
-	[ -z "$ftp_proxy" -a -n "$http_proxy" ] && ftp_proxy="$http_proxy"
-	[ -z "$https_proxy" -a -n "$http_proxy" ] && https_proxy="$http_proxy"
-	[ -z "$HTTP_PROXY" -a -n "$http_proxy" ] && HTTP_PROXY="$http_proxy"
-	[ -z "$HTTPS_PROXY" -a -n "$HTTP_PROXY" ] && HTTPS_PROXY="$HTTP_PROXY"
-	[ -z "$FTP_PROXY" -a -n "$HTTP_PROXY" ] && FTP_PROXY="$HTTP_PROXY"
+	if [ -n "$disabled_server" ]; then
+		disabled_login=`echo $disabled_login | sed 's/[^a-z0-9_-]//g'`
+		disabled_password=$(quote_shell $disabled_password)
+		disabled_server=`echo $disabled_server | sed 's/[^a-zA-Z0-9.-]//g'`
+		disabled_port=`echo $disabled_port | sed 's/[^0-9]//g'`
 
-	# parse [user:pass@]server:port to begin with
-	PROXY="`echo $http_proxy | sed \
-	's,^\(http://\)\?\([a-zA-Z0-9._-]\+:\?[^@]\+@\)\?\([a-zA-Z0-9.-]\+\)\(:[0-9]\+\)\?/\?$,\3\4 \2,i'`"
-
-	echo '('
-
-	[ -n "$PROXY" ] && echo $PROXY | (IFS=':@ ' read server port login password
-		#[ -n "$PORT" ] || PORT=$DEFPORT
-		printf 'server "%s"' "$server"
-		printf 'port "%s"' "$port"
-		[ -n "$login" ] && {
+		write_lpar
+		echo 'enabled #f'
+		printf 'server "%s"' "$disabled_server"
+		printf 'port "%s"' "$disabled_port"
+		[ -n "$disabled_login" ] && {
 			echo 'auth #t'
-			printf 'login "%s"' "$login"
-			printf 'password "%s"' "$password"
+			printf 'login "%s"' "$disabled_login"
+			printf 'password "%s"' "$disabled_password"
 		} || echo 'auth #f'
-	)
+		write_rpar
+	else
+		# fallbacks
+		[ -n "$ftp_proxy" -a -z "$http_proxy" ] && http_proxy="$ftp_proxy"
+		[ -n "$https_proxy" -a -z "$http_proxy" ] && http_proxy="$https_proxy"
+		[ -n "$HTTP_PROXY" -a -z "$http_proxy" ] && http_proxy="$HTTP_PROXY"
+		[ -n "$HTTPS_PROXY" -a -z "$http_proxy" ] && http_proxy="$HTTPS_PROXY"
+		[ -n "$FTP_PROXY" -a -z "$http_proxy" ] && http_proxy="$FTP_PROXY"
 
-	echo ')'
+		# parse [user:pass@]server:port to begin with
+		PROXY="`echo $http_proxy | sed \
+		's,^\(http://\)\?\([a-zA-Z0-9._-]\+:\?[^@]\+@\)\?\([a-zA-Z0-9.-]\+\)\(:[0-9]\+\)\?/\?$,\3\4 \2,i'`"
+
+		write_lpar
+
+		[ -n "$PROXY" ] && echo "$PROXY" | (IFS=':@ ' read server port login password
+			#[ -n "$PORT" ] || PORT=$DEFPORT
+			echo 'enabled #t'
+			printf 'server "%s"' "$server"
+			printf 'port "%s"' "$port"
+			[ -n "$login" ] && {
+				echo 'auth #t'
+				printf 'login "%s"' "$login"
+				printf 'password "%s"' $(quote_shell "$password")
+			} || echo 'auth #f'
+		) || echo 'enabled #f'
+
+		write_rpar
+
+	fi
+
 }
 
-write_settings()
-{
-	local AUTH=
-	local PROXY=
+#-----------------------------------------------------------------------
+write_settings() {
+	deb_caller "$@"
 
-	[ -z "$in_login" ] || AUTH="$in_login:$in_password@"
-	[ -z "$in_server" ] || PROXY="http://$AUTH$in_server:$in_port/"
+	in_login=`echo $in_login | sed 's/[^a-z0-9_-]//g'`
+	in_password=$(quote_shell $(quote_shell $in_password))
+	in_server=`echo $in_server | sed 's/[^a-zA-Z0-9.-]//g'`
+	in_port=`echo $in_port | sed 's/[^0-9]//g'`
 
 	touch "$SETTINGS"
-	for var in $VARS; do
-		shell_add_or_subst "export $var=" "$PROXY" "$SETTINGS"
-	done
 
-	if [ "$in_server" = "" ] && [ "$in_portr" = "" ] && [ "$in_login" = "" ] && [ "$in_password" = "" ]; then
-		echo > "$SETTINGS"
+	if [ -z "$in_enabled" -o "$in_enabled" = "#f" ]; then
+		shell_add_or_subst "disabled_login=" "$in_login" "$SETTINGS"
+		shell_add_or_subst "disabled_password=" "$in_password" "$SETTINGS"
+		shell_add_or_subst "disabled_server=" "$in_server" "$SETTINGS"
+		shell_add_or_subst "disabled_port=" "$in_port" "$SETTINGS"
+
+		for var in $VARS; do
+			shell_add_or_subst "export $var=" "" "$SETTINGS"
+		done
+	else
+		for var in $DISA; do
+			shell_add_or_subst "$var=" "" "$SETTINGS"
+		done
+
+		local AUTH=
+		local PROXY=
+
+		[ -z "$in_login" ] || AUTH="$in_login$([ -n "$in_password" ] && echo ":$in_password")@"
+		[ -z "$in_server" ] || PROXY="http://$AUTH$in_server:$in_port/"
+
+		for var in $VARS; do
+			shell_add_or_subst "export $var=" "$PROXY" "$SETTINGS"
+		done
 	fi
 
 	chmod 0755 "$SETTINGS"
 
-	echo '()'
+	write_nop
 }
 
+#-----------------------------------------------------------------------
+constraints() {
+	deb_caller "$@"
 
-constraints()
-{
-	if [ "$in_server" = "" ] && [ "$in_portr" = "" ] && [ "$in_login" = "" ] && [ "$in_password" = "" ]; then
-		echo "#t"
+	local required="$([ -n "$in_password" ] && echo '#t' || echo '#f')"
+
+	write_lpar
+	if [ -z "$in_enabled" -o "$in_enabled" = "#f" ]; then
+		printf 'enabled (exclude (#t server) exclude (#t port) exclude (#t login) exclude (#t password))'
 	else
-		local required="$([ "$in_orig_action" = "new" ] && echo "#t" || echo "#f")"
-		echo '('
-		printf 'server (required #t match ("^[[:alnum:].-]+$" "%s") label "%s")' \
-		"`_ "invalid proxy hostname"`" "`_ "Server"`"
-		printf 'port  (required #t match ("^[0-9]+$"  "%s")  default "3128" label "%s")' \
-		"`_ "should be a number"`" \
-		"`_ "Port"`"
-		echo ')'
+		printf 'server (required #t match ("^[a-zA-Z0-9.-]+$" "%s") label "%s")' \
+			"`_ "invalid proxy hostname"`" \
+			"`_ "Server"`"
+		printf 'port  (required #t match ("^[0-9]+$"  "%s") default "3128" label "%s")' \
+			"`_ "should be a number"`" \
+			"`_ "Port"`"
+		printf 'login (required %s match ("^([a-z_][a-z0-9_-]*)?$" "%s") label "%s")' \
+			$required \
+			"`_ "only small latin letters, digits and '_' allowed"`" \
+			"`_ "Login"`"
 	fi
+	write_rpar
 }
 
-_()
-{
-LANG=${in_language%%;*}.utf8 gettext "alterator-proxy" "$1"
-}
+## MAIN ################################################################
 
 . /usr/share/alterator/build/backend3.sh
 
-on_message()
-{
+if [ -n "$DEBUG" ]; then
+	deb_echo "=run:" "$$"
+fi
+
+#-----------------------------------------------------------------------
+on_message() {
+	if [ -n "$DEBUG" ]; then
+		deb_echo '==================================================='
+		deb_caller "$@"
+		deb_echo '=env:' $(set | grep "^in_")
+	fi
+
 	case "$in_action" in
 		constraints)
 			constraints;;
 		list)
-			nop;;
-		read) 
+			write_nop;;
+		read)
 			read_settings;;
 		write)
 			write_settings;;
 		*)
-			nope;;
+			write_bool "true";;
 	esac
 }
 
+#***********************************************************************
 message_loop
-

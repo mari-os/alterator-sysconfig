@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 15:59+0200\n"
+"POT-Creation-Date: 2008-07-17 17:20+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,62 +16,74 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui/proxy/index.scm:9
-msgid "Proxy"
-msgstr ""
-
-#: ui/proxy/index.scm:13 backend3/proxy:103
-msgid "Server"
+#: ui/proxy/index.scm:14
+msgid "Enabled"
 msgstr ""
 
 #: ui/proxy/index.scm:16
-msgid "Might be as simple as \"proxy\""
+msgid "Might be enable or disable \"proxy\""
 msgstr ""
 
-#: ui/proxy/index.scm:20 backend3/proxy:106
-msgid "Port"
+#: ui/proxy/index.scm:25
+msgid "Proxy"
 msgstr ""
 
-#: ui/proxy/index.scm:23
-msgid "Usual values are 3128 or 8080"
-msgstr ""
-
-#: ui/proxy/index.scm:30
-msgid "Authentication"
+#: ui/proxy/index.scm:29 backend3/proxy:145
+msgid "Server"
 msgstr ""
 
 #: ui/proxy/index.scm:34
-msgid "Login"
+msgid "Might be as simple as \"proxy\""
 msgstr ""
 
-#: ui/proxy/index.scm:37
-msgid "Only needed for authenticated proxy"
+#: ui/proxy/index.scm:41 backend3/proxy:148
+msgid "Port"
 msgstr ""
 
-#: ui/proxy/index.scm:41
-msgid "Password"
-msgstr ""
-
-#: ui/proxy/index.scm:45
-msgid "Makes sense with login"
-msgstr ""
-
-#: ui/proxy/index.scm:52
-msgid "Apply"
-msgstr ""
-
-#: ui/proxy/index.scm:53
-msgid "Reset"
+#: ui/proxy/index.scm:46
+msgid "Usual values are 3128 or 8080"
 msgstr ""
 
 #: ui/proxy/index.scm:54
+msgid "Authentication"
+msgstr ""
+
+#: ui/proxy/index.scm:58 backend3/proxy:152
+msgid "Login"
+msgstr ""
+
+#: ui/proxy/index.scm:63
+msgid "Only needed for authenticated proxy"
+msgstr ""
+
+#: ui/proxy/index.scm:70
+msgid "Password"
+msgstr ""
+
+#: ui/proxy/index.scm:76
+msgid "Makes sense with login"
+msgstr ""
+
+#: ui/proxy/index.scm:87
+msgid "Save"
+msgstr ""
+
+#: ui/proxy/index.scm:88
+msgid "Reload"
+msgstr ""
+
+#: ui/proxy/index.scm:89
 msgid "Quit"
 msgstr ""
 
-#: backend3/proxy:103
+#: backend3/proxy:144
 msgid "invalid proxy hostname"
 msgstr ""
 
-#: backend3/proxy:105
+#: backend3/proxy:147
 msgid "should be a number"
+msgstr ""
+
+#: backend3/proxy:151
+msgid "only small latin letters, digits and '_' allowed"
 msgstr ""
