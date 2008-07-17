@@ -1,0 +1,143 @@
+#!/bin/sh -ef
+SETTINGS=/etc/profile.d/proxy.sh
+VARS="https_proxy http_proxy ftp_proxy HTTPS_PROXY HTTP_PROXY FTP_PROXY"
+#DEFPORT=3128
+
+################### shell file helpers
+
+shell_add_or_subst()
+{
+	local name="$1" && shift
+	local value="$1" && shift
+	local file="$1" && shift
+
+	[ -f "$file" ] || touch "$file"
+	if grep -qs "^$name" "$file"; then
+		/bin/sed -r -i "s,^$name.*,$name$value," -- "$file"
+		return 0
+	fi
+	echo "$name$value" >> "$file"
+}
+
+################### debug
+
+debug()
+{
+	[ -n "$DEBUG" ] && echo $* >&2
+}
+
+################### should also be a library function
+
+nop()  { echo '()'; }
+nope() { echo '#f'; }
+
+################### proxy settings helpers
+
+read_settings()
+{
+	local https_proxy=
+	local  http_proxy=
+	local   ftp_proxy=
+	local HTTPS_PROXY=
+	local  HTTP_PROXY=
+	local   FTP_PROXY=
+
+	local server=
+	local port=
+	local login=
+	local password=
+	
+	# SourceIfNotEmpty...
+	[ -s "$SETTINGS" -a -x "$SETTINGS" ] && . "$SETTINGS"
+
+	# fallbacks
+	[ -z "$ftp_proxy" -a -n "$http_proxy" ] && ftp_proxy="$http_proxy"
+	[ -z "$https_proxy" -a -n "$http_proxy" ] && https_proxy="$http_proxy"
+	[ -z "$HTTP_PROXY" -a -n "$http_proxy" ] && HTTP_PROXY="$http_proxy"
+	[ -z "$HTTPS_PROXY" -a -n "$HTTP_PROXY" ] && HTTPS_PROXY="$HTTP_PROXY"
+	[ -z "$FTP_PROXY" -a -n "$HTTP_PROXY" ] && FTP_PROXY="$HTTP_PROXY"
+
+	# parse [user:pass@]server:port to begin with
+	PROXY="`echo $http_proxy | sed \
+	's,^\(http://\)\?\([a-zA-Z0-9._-]\+:\?[^@]\+@\)\?\([a-zA-Z0-9.-]\+\)\(:[0-9]\+\)\?/\?$,\3\4 \2,i'`"
+
+	echo '('
+
+	[ -n "$PROXY" ] && echo $PROXY | (IFS=':@ ' read server port login password
+		#[ -n "$PORT" ] || PORT=$DEFPORT
+		printf 'server "%s"' "$server"
+		printf 'port "%s"' "$port"
+		[ -n "$login" ] && {
+			echo 'auth #t'
+			printf 'login "%s"' "$login"
+			printf 'password "%s"' "$password"
+		} || echo 'auth #f'
+	)
+
+	echo ')'
+}
+
+write_settings()
+{
+	local AUTH=
+	local PROXY=
+
+	[ -z "$in_login" ] || AUTH="$in_login:$in_password@"
+	[ -z "$in_server" ] || PROXY="http://$AUTH$in_server:$in_port/"
+
+	touch "$SETTINGS"
+	for var in $VARS; do
+		shell_add_or_subst "export $var=" "$PROXY" "$SETTINGS"
+	done
+
+	if [ "$in_server" = "" ] && [ "$in_portr" = "" ] && [ "$in_login" = "" ] && [ "$in_password" = "" ]; then
+		echo > "$SETTINGS"
+	fi
+
+	chmod 0755 "$SETTINGS"
+
+	echo '()'
+}
+
+
+constraints()
+{
+	if [ "$in_server" = "" ] && [ "$in_portr" = "" ] && [ "$in_login" = "" ] && [ "$in_password" = "" ]; then
+		echo "#t"
+	else
+		local required="$([ "$in_orig_action" = "new" ] && echo "#t" || echo "#f")"
+		echo '('
+		printf 'server (required #t match ("^[[:alnum:].-]+$" "%s") label "%s")' \
+		"`_ "invalid proxy hostname"`" "`_ "Server"`"
+		printf 'port  (required #t match ("^[0-9]+$"  "%s")  default "3128" label "%s")' \
+		"`_ "should be a number"`" \
+		"`_ "Port"`"
+		echo ')'
+	fi
+}
+
+_()
+{
+LANG=${in_language%%;*}.utf8 gettext "alterator-proxy" "$1"
+}
+
+. /usr/share/alterator/build/backend3.sh
+
+on_message()
+{
+	case "$in_action" in
+		constraints)
+			constraints;;
+		list)
+			nop;;
+		read) 
+			read_settings;;
+		write)
+			write_settings;;
+		*)
+			nope;;
+	esac
+}
+
+message_loop
+
