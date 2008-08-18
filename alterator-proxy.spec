@@ -1,7 +1,7 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-proxy
-Version: 0.4
+Version: 0.4.1
 Release: alt1
 
 Summary: alterator module for client-side proxy configuration
@@ -41,6 +41,11 @@ to "notice" the updated environment.
 %doc TODO
 
 %changelog
+* Mon Aug 18 2008 Michael Shigorin <mike@altlinux.org> 0.4.1-alt1
+- some more reworking by val@
+- merge-up by me
+- improved tooltip for "enable" checkbox
+
 * Wed Jun 04 2008 Michael Shigorin <mike@altlinux.org> 0.4-alt1
 - merged changes by Valentyn Solomko ("disable proxy")
   which supersede "clear settings" from 0.3
