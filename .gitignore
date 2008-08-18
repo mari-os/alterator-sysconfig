@@ -1,0 +1,7 @@
+*~
+*-
+*.old*
+*.sav*
+*.diff
+*.go
+INFO
