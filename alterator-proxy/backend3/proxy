@@ -1,10 +1,334 @@
 #!/bin/sh -ef
 
 . shell-quote
-. alterator-sh-functions
-. alterator-sh-debug
+# . alterator-sh-functions
+# . alterator-sh-debug
 
-# DEBUG="on"
+## >alterator-sh-functions #############################################
+alterator_api_version="${alterator_api_version:-0}"
+
+. shell-error
+. shell-quote
+
+#-----------------------------------------------------------------------
+exec 3>&1
+[ "$alterator_api_version" -le 0 ] || exec 1>&2
+
+### INTERNAL FUNCTIONS #################################################
+
+#-----------------------------------------------------------------------
+_write_begin()
+{
+	printf "(\n" >&3
+}
+
+#-----------------------------------------------------------------------
+_write_end()
+{
+	printf ")\n" >&3
+}
+
+#-----------------------------------------------------------------------
+_validate_symbol()
+{
+	[ -n "${1##*[!0-9A-Za-z_]*}" ] || fatal "wrong attribute name:$1"
+}
+
+### STRING #############################################################
+
+#-----------------------------------------------------------------------
+string_quote()
+{
+	sed 's,[\"],\\&,g' -- "$@"
+}
+
+#-----------------------------------------------------------------------
+newline_unquote()
+{
+	if [ "$1" != "_objects" ]; then
+		local separator=$(printf '\007')
+		sed  -e "s,\\\\\(.\),$separator\1,g" \
+		-e "s,${separator}n,\n,g" \
+		-e "s,$separator,,g"
+	else
+		cat
+	fi
+}
+
+#-----------------------------------------------------------------------
+uppercase()
+{
+	echo -n $@ | tr [:lower:] [:upper:];
+}
+
+#-----------------------------------------------------------------------
+lowercase()
+{
+	echo -n $@ | tr [:upper:] [:lower:];
+}
+
+#-----------------------------------------------------------------------
+parenthesize()
+{
+	while read i; do
+		echo "(\"$i\")"
+	done;
+}
+
+### MAIN MESSAGE LOOP ##################################################
+
+#-----------------------------------------------------------------------
+_userhandler() {  # trick to protect loop values
+	local l= readmsg= params=
+	local IFS="$IFS" PATH="$PATH" # Protected variables
+	[ "$alterator_api_version" -le 0 ] || _write_begin
+	"${1:-on_message}" ||: # ignore exit code of user actions
+	[ "$alterator_api_version" -le 0 ] || _write_end
+}
+
+#-----------------------------------------------------------------------
+message_loop() {
+	local l= readmsg= params= name= value=
+	while read -r l; do
+		if [ "$l" != "${l#_message:begin}" ]; then
+			[ -n "$params" ] && unset $params params ||:
+			readmsg=1
+			continue
+		fi
+
+		if [ -n "$readmsg" -a "$l" != "${l#_message:end}" ]; then
+			_userhandler "$1"
+			readmsg=
+		fi
+
+		[ -n "$readmsg" ] || continue
+
+		name="$(printf %s\\n "${l%%:*}" | sed -e 's,[^[:alnum:]_],,g')" &&
+		value="$(printf %s\\n "${l#*:}" | newline_unquote "$name")" || continue
+		eval "in_$name=\"$(quote_shell "$value")\"" && params="$params in_$name" && name= value= ||:
+	done
+}
+
+### INPUT/OUTPUT FUNCTIONS #############################################
+
+#-----------------------------------------------------------------------
+write_string()
+{
+	local out="$*"
+	if [ -z "${out##*[\"\\\\]*}" ]; then
+		out="$(printf %s "$out" |string_quote)" ||
+		return 1
+	fi
+	printf %s "$out"
+}
+
+#-----------------------------------------------------------------------
+write_bool()
+{
+	case "$1" in
+		[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee]|[Oo][Nn]|[Yy]|1)
+			echo '#t'
+		;;
+		*)
+			echo '#f'
+		;;
+	esac
+}
+
+
+#-----------------------------------------------------------------------
+test_bool()
+{
+	[ "$1" = "#t" ]
+}
+
+
+### I18N SUPPORT #######################################################
+
+#-----------------------------------------------------------------------
+write_language()
+{
+	local charset="${po_charset:-UTF-8}"
+	echo "$1" |
+		sed -r \
+			-e "s,([^;]+)(;|$),\1.$charset\2,g" \
+			-e 's,;,:,g'
+}
+
+#-----------------------------------------------------------------------
+#Note: gettext uses encoding from lc_ctype and translation from language
+po_domain="${po_domain:-alterator-${0##*/}}"
+
+#-----------------------------------------------------------------------
+_()
+{
+	local domain="${2:-$po_domain}"
+	local langlist="$(write_language "$in_language")"
+	local firstlang="${langlist%%:*}"
+
+	LC_ALL="$firstlang" LANGUAGE="$langlist" gettext "$domain" "$1"
+}
+
+### HIGH LEVEL OUTPUT ##################################################
+
+#-----------------------------------------------------------------------
+write_string_param()
+{
+	_validate_symbol "$1"
+	printf '%s "%s"\n' "$1" "$(write_string "$2")" >&3
+}
+
+#-----------------------------------------------------------------------
+write_bool_param()
+{
+	_validate_symbol "$1"
+	printf '%s %s\n' "$1" "$(write_bool "$2")" >&3
+}
+
+#-----------------------------------------------------------------------
+write_enum_item()
+{
+	if [ $# -eq 0 ];then
+		echo "WARNING: write_enum_item for stream is deprecated, use write_enum instead" >&2
+		string_quote | while read -r name label; do
+			[ -n "$name" ] || continue
+			printf '(name "%s" label "%s")\n' \
+				"$name" \
+				"${label:-$name}"
+		done
+	else
+		printf '(name "%s" label "%s")\n' \
+			"$(write_string "$1")" \
+			"$(write_string "${2:-$1}")"
+	fi >&3
+}
+
+#-----------------------------------------------------------------------
+write_enum()
+{
+	string_quote | while read -r name label; do
+		[ -n "$name" ] || continue
+		printf '(name "%s" label "%s")\n' \
+			"$name" \
+			"${label:-$name}"
+	done >&3
+}
+
+#-----------------------------------------------------------------------
+write_table_item()
+{
+	[ $# -gt 0 -a "$(($# % 2))" = "0" ] || fatal "wrong number of arguments"
+
+	printf '(' >&3
+	while [ $# -gt 0 ]; do
+		local name="$1"; shift
+		local value="$1"; shift
+		_validate_symbol "$name"
+		printf ' %s "%s"' "$name" "$(write_string "$value")" >&3
+	done
+	printf ')' >&3
+}
+
+#-----------------------------------------------------------------------
+write_error()
+{
+	[ "$alterator_api_version" -gt 0 ] || _write_begin
+	write_string_param 'error' "$1"
+	[ "$alterator_api_version" -gt 0 ] || _write_end
+}
+
+#-----------------------------------------------------------------------
+write_nop()
+{
+	[ "$alterator_api_version" -gt 0 ] || _write_begin
+	[ "$alterator_api_version" -gt 0 ] || _write_end
+}
+
+#-----------------------------------------------------------------------
+write_lpar() {
+	echo '(' >&3
+}
+
+#-----------------------------------------------------------------------
+write_rpar() {
+	echo ')' >&3
+}
+
+#-----------------------------------------------------------------------
+write_debug()
+{
+	[ -z "$DEBUG" ] || printf "$@" >&2
+}
+
+### BACKWARD COMPATIBILITY: API_VERSION < 0 ############################
+alias simple_quote=string_quote
+## <alterator-sh-functions #############################################
+
+## >alterator-sh-debug #################################################
+MODULE=`basename $0`
+LOGFILE="$HOME/tmp/$MODULE-debug.log"
+ERRFILE="$HOME/tmp/$MODULE-errors.log"
+
+### DEBUG ##############################################################
+
+#-----------------------------------------------------------------------
+_deb_time()
+{
+	if [ -n "$DEBUG" ]; then
+		echo -n "$(date +"%F %T"): " >> $LOGFILE
+	fi
+}
+#-----------------------------------------------------------------------
+deb_echo()
+{
+	if [ -n "$DEBUG" ]; then
+	_deb_time
+		echo "$@" >> $LOGFILE
+	fi
+}
+
+#-----------------------------------------------------------------------
+deb_printf()
+{
+	if [ -n "$DEBUG" ]; then
+	_deb_time
+		printf "$@" >> $LOGFILE
+		echo >> $LOGFILE
+	fi
+}
+
+#-----------------------------------------------------------------------
+deb_caller()
+{
+	if [ -n "$DEBUG" ]; then
+		deb_echo '=call:' $(caller 0)
+		deb_echo '=from:' $(caller 1)
+		if [ "$#" -gt 0 ]; then
+			deb_echo '=params:' "$@"
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+deb_tee()
+{
+	fun=$1; shift
+
+	if [ -n "$DEBUG" ]; then
+		_deb_time
+		$fun "$@" | tee -a $LOGFILE
+		echo >> $LOGFILE
+	else
+		$fun "$@"
+	fi
+}
+
+### ALIASES ############################################################
+alias write_debug=deb_printf
+## <alterator-sh-debug #################################################
+
+
+DEBUG="on"
 
 if [ -n "$DEBUG" ]; then
 	SETTINGS=$HOME/tmp/proxy.sh
