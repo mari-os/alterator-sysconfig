@@ -3,7 +3,9 @@
 
 (document:envelop with-translation _ "alterator-proxy")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DISPLAY =============================================================
+
+;;**********************************************************************
 (gridbox columns "10;80;10"
 	;;--------------------------------
 	(spacer)
@@ -13,10 +15,7 @@
 			state #t
 			tooltip (_ "Might be enable or disable \"proxy\"")
 			(when toggled
-				(if (proxy_enabled state)
-					(toggle-edit #t (list server port login password))
-					(toggle-edit #f (list server port login password))
-				)
+				(toggle-control-activity (proxy_enabled state) (widgets server port login password))
 			)
 		)
 	)
@@ -29,7 +28,8 @@
 			(spacer)
 			(label (_ "Server"))
 			(document:id server
-				(edit ""
+				(edit
+					""
 					widget-name "server"
 					tooltip (_ "Might be as simple as \"proxy\"")
 					(when changed (clean-edit server "[^a-zA-Z0-9.-]\+"))
@@ -40,7 +40,8 @@
 			(spacer)
 			(label (_ "Port"))
 			(document:id port
-				(edit ""
+				(edit
+					""
 					widget-name "port"
 					tooltip (_ "Usual values are 3128 or 8080")
 					(when changed (clean-edit port "[^0-9]\+"))
@@ -56,7 +57,8 @@
 			(spacer)
 			(label (_ "Login"))
 			(document:id login
-				(edit ""
+				(edit
+					""
 					widget-name "login"
 					tooltip (_ "Only needed for authenticated proxy")
 					(when changed (clean-edit login "[^a-z0-9_-]\+"))
@@ -67,7 +69,8 @@
 			(spacer)
 			(label (_ "Password"))
 			(document:id password
-				(edit ""
+				(edit
+					""
 					echo stars
 					widget-name "password"
 					tooltip (_ "Makes sense with login")
@@ -81,14 +84,25 @@
 	(spacer)
 	(gridbox columns "30;30;30"
 		align "center"
-		(document:id apply-button (button (_ "Apply")))
-		(document:id reset-button (button (_ "Reset")))
+		(document:id apply-button (button (_ "Save")))
+		(document:id reset-button (button (_ "Reload")))
 		(document:id quit-button (button (_ "Quit") ))
 	)
 	(spacer)
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; BEHAVIOUR ===========================================================
+
+;;**********************************************************************
+(apply-button (when clicked (write-proxy)))
+
+;;**********************************************************************
+(reset-button (when clicked (read-proxy)))
+
+;;**********************************************************************
+(quit-button (when clicked (document:end)))
+
+;;**********************************************************************
 (define (clean-edit edt rx-string)
 	(define s (edt text))
 	(define z (make-cell ""))
@@ -102,25 +116,17 @@
 	)
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define (toggle-edit what who)
-	(define (toggle-next-edit what who)
-		(cond ((not (null? who))
-			((car who) alterability what activity what)
-			(toggle-next-edit what (cdr who))
-			)
-		)
-	)
+;;**********************************************************************
+(define (toggle-control-activity what controls)
+	(controls alterability what activity what)
 
-;; 	(if (eq? what #t)
+;; 	(if what
 ;; 		(proxy_enabled text (_ "Enabled"))
 ;; 		(proxy_enabled text (_ "Disabled"))
 ;; 	)
-
-	(toggle-next-edit what who)
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;**********************************************************************
 (define (read-proxy)
 	(let
 		(
@@ -133,14 +139,9 @@
 		(password text (woo-get-option data 'password))
 		(proxy_enabled state (woo-get-option data 'enabled))
 	)
-
-	(if (proxy_enabled state)
-		(toggle-edit #t (list server port login password))
-		(toggle-edit #f (list server port login password))
-	)
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;**********************************************************************
 (define (write-proxy)
 	(woo-catch/message
 		(thunk
@@ -155,22 +156,13 @@
 	)
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(apply-button (when clicked (write-proxy)))
+;; MAIN ================================================================
 
-(reset-button (when clicked (read-proxy)))
-
-(quit-button (when clicked (document:end)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;**********************************************************************
 (document:root
 	(when loaded
 		(read-proxy)
 		(update-constraints "read" "/proxy" 'enabled (proxy_enabled state))
-
-		(if (proxy_enabled state)
-			(toggle-edit #t (list server port login password))
-			(toggle-edit #f (list server port login password))
-		)
+		(toggle-control-activity (proxy_enabled state) (widgets server port login password))
 	)
 )
