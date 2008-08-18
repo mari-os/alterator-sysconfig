@@ -21,7 +21,7 @@ msgid "Enabled"
 msgstr ""
 
 #: ui/proxy/index.scm:16
-msgid "Might be enable or disable \"proxy\""
+msgid "Enable or disable this proxy"
 msgstr ""
 
 #: ui/proxy/index.scm:25

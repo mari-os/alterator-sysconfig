@@ -20,8 +20,8 @@ msgid "Enabled"
 msgstr "Використовувати"
 
 #: ui/proxy/index.scm:16
-msgid "Might be enable or disable \"proxy\""
-msgstr "Можна дозволити або заборонити використання \"proxy\""
+msgid "Enable or disable this proxy"
+msgstr "Увімкнути або вимкнути використання цього проксі"
 
 #: ui/proxy/index.scm:25
 msgid "Proxy"

@@ -13,7 +13,7 @@
 		(checkbox
 			(_ "Enabled")
 			state #t
-			tooltip (_ "Might be enable or disable \"proxy\"")
+			tooltip (_ "Enable or disable this proxy")
 			(when toggled
 				(toggle-control-activity (proxy_enabled state) (widgets server port login password))
 			)
