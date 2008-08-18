@@ -1,7 +1,7 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-proxy
-Version: 0.4.1
+Version: 0.4.2
 Release: alt1
 
 Summary: alterator module for client-side proxy configuration
@@ -40,7 +40,13 @@ to "notice" the updated environment.
 %_alterator_backend3dir/*
 %doc TODO
 
+# TODO:
+# - un-link "static" part of shell functions in backend
+
 %changelog
+* Mon Aug 18 2008 Michael Shigorin <mike@altlinux.org> 0.4.2-alt1
+- disabled debug mode
+
 * Mon Aug 18 2008 Michael Shigorin <mike@altlinux.org> 0.4.1-alt1
 - some more reworking by val@
 - merge-up by me
