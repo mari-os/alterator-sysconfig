@@ -12,3 +12,6 @@ see also https://bugzilla.altlinux.org/show_bug.cgi?id=14059
 - NTLM auth proxy option?
 
 - *.csh?
+
+- replace "static linking" of additional debug functions 
+  which should go to alterator-sh-functions when these are there
