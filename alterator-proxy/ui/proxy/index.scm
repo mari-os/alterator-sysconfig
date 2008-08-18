@@ -71,7 +71,7 @@
 			(document:id password
 				(edit
 					""
-					echo stars
+					echo "stars"
 					widget-name "password"
 					tooltip (_ "Makes sense with login")
 					;;FIXME user may enter one of sepchars
@@ -162,7 +162,7 @@
 (document:root
 	(when loaded
 		(read-proxy)
-		(update-constraints "read" "/proxy" 'enabled (proxy_enabled state))
+		;(update-constraints "read" "/proxy" 'enabled (proxy_enabled state))
 		(toggle-control-activity (proxy_enabled state) (widgets server port login password))
 	)
 )
