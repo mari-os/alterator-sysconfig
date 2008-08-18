@@ -328,9 +328,9 @@ alias write_debug=deb_printf
 ## <alterator-sh-debug #################################################
 
 
-DEBUG="on"
+#DEBUG="on"
 
-if [ -n "$DEBUG" ]; then
+if [ "$DEBUG" = "on" ]; then
 	SETTINGS=$HOME/tmp/proxy.sh
 else
 	SETTINGS=/etc/profile.d/proxy.sh
