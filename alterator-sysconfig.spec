@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.7
-Release: alt2
+Release: alt3
 
 Requires: alterator-sh-functions
 
@@ -44,13 +44,17 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 
 %files -f %name.lang
-%_sysconfdir/alterator/sysconfig
+%config(noreplace) %_sysconfdir/alterator/sysconfig
 %_datadir/alterator/ui/*/
 %_datadir/alterator/help/*/*
 %_alterator_backend3dir/*
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Mon Aug 25 2008 Stanislav Ievlev <inger@altlinux.org> 0.7-alt3
+- add support for defaults (/etc/sysconfig/kbd/kbdlist)
+- syskbd backend: alterator_api_version = 1
+
 * Mon May 26 2008 Stanislav Ievlev <inger@altlinux.org> 0.7-alt2
 - join to common translation datebase
 - improve ui layout

@@ -1,7 +1,7 @@
 (document:surround "/std/frame")
 (document:insert "/std/functions")
 
-(document:envelop with-translation _ "alterator-sysconfig")
+(po-domain "alterator-sysconfig")
 
 (define (write-keyboard)
   (woo-catch/message
@@ -10,6 +10,12 @@
       (and-let* ((kbd (keyboard-type value)));;save console and X11 keyboard layout
 	(woo-write "/syskbd/" 'layout kbd))
       #t)))
+
+(define (default-keyboard)
+  (keyboard-type value (woo-get-option (woo-read-first "/syskbd")
+                                       'layout))
+  (or (positive? (keyboard-type current))
+      (keyboard-type current 0)))
 
 ;;;;;;;;;;;;
 
@@ -28,8 +34,11 @@
 (frame:on-next (thunk (or (write-keyboard) 'cancel)))
 
 (document:root (when loaded
-                 (keyboard-type enumref "/syskbd")
-                 (let ((len (keyboard-type count)))
-                   (and (positive? len) (keyboard-type current 0))
-                   (and (= len 1) (write-keyboard))
-                   (and (<= len 1) (frame:skip)))))
+		 (woo-catch/message
+		   (lambda()
+		       (keyboard-type enumref "/syskbd")
+		     (let ((len (keyboard-type count)))
+		       (and (positive? len) (default-keyboard))
+		       (and (= len 1) (write-keyboard))
+		       (and (<= len 1) (frame:skip)))))))
+
