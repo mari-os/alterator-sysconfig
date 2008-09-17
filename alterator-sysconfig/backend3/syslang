@@ -30,7 +30,7 @@ on_message()
 			[ -s "$lang_file" ] || lang_file="$langlist.all"
 
 			echo '('
-			write_enum_item <"$lang_file"
+			write_enum <"$lang_file"
 			echo ')'
                         ;;
 		write)

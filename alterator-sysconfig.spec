@@ -21,6 +21,7 @@ Summary: alterator module for basic system settings
 License: GPL
 Group: System/Configuration/Other
 Requires: alterator >= 3.5-alt1
+Requires: alterator-sh-functions >= 0.6-alt2
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
 
