@@ -1,5 +1,6 @@
 #!/bin/sh
 
+alterator_api_version=1
 . alterator-sh-functions
 
 DATADIR=/etc/alterator/sysconfig/
@@ -11,10 +12,6 @@ on_message()
 		write)
 			#TODO: use language information
 			cp -af "$DATADIR/consolefont" "$CONFIGDIR/consolefont"
-			write_nop
-			;;
-		*)
-			echo '#f'
 			;;
 	esac
 }
