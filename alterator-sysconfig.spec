@@ -20,7 +20,7 @@ Source:%name-%version.tar
 Summary: alterator module for basic system settings
 License: GPL
 Group: System/Configuration/Other
-Requires: alterator >= 3.2-alt6
+Requires: alterator >= 3.5-alt1
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
 

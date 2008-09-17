@@ -3,12 +3,9 @@ NAME=sysconfig
 INSTALL=/usr/bin/install
 
 all:
-clean: clean-po 
-install: install-backend install-ui install-po install-data 
+install: install-module install-data
 
-include /usr/share/alterator/build/po.mak
-include /usr/share/alterator/build/ui2.mak
-include /usr/share/alterator/build/backend.mak
+include /usr/share/alterator/build/module.mak
 
 install-data:
 	$(INSTALL) -d $(sysconfdir)/alterator/sysconfig
