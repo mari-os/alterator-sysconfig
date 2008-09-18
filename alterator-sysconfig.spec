@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.7
-Release: alt3
+Version: 0.8
+Release: alt1
 
 Requires: alterator-sh-functions
 
@@ -52,6 +52,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Thu Sep 18 2008 Vladislav Zavjalov <slazav@altlinux.org> 0.8-alt1
+- Merge all interfaces and all backeends (keep old versions)
+
 * Mon Aug 25 2008 Stanislav Ievlev <inger@altlinux.org> 0.7-alt3
 - add support for defaults (/etc/sysconfig/kbd/kbdlist)
 - syskbd backend: alterator_api_version = 1
