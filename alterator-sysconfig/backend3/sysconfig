@@ -1,0 +1,124 @@
+#!/bin/sh
+
+# merge of all bakends (sysfont syskbd syslang) of alterator-sysconfig
+
+alterator_api_version=1
+. alterator-sh-functions
+. shell-config
+
+ALTCONFDIR=/etc/alterator/sysconfig/
+KBDDIR=$ALTCONFDIR/kbd
+CONFIGDIR=/etc/sysconfig/
+KBD_CONFIG=/etc/sysconfig/keyboard
+XKB_CONFIG=/etc/X11/xinit/Xkbmap
+
+i18n_conf="/etc/sysconfig/i18n"
+langmap_conf="/etc/sysconfig/langmap"
+rpm_conf="/etc/rpm/macros"
+
+langlist="/etc/alterator/sysconfig/lang/langlist"
+po_charset="UTF-8"
+
+# sysconfig-kbd stuff
+
+write_layout(){
+  case "$1" in
+    alt_sh_toggle) echo "`_ "Alt+Shift key"`";;
+    caps_toggle) echo "`_ "CapsLock key"`";;
+    ctrl_shift_toggle) echo "`_ "Control+Shift keys"`";;
+    ctrl_toggle) echo "`_ "Control key"`";;
+    toggle) echo "`_ "Alt key"`";;
+    ctrl_shift_toggle_ru_ua) echo "`_ "Control+Shift keys (UK,RU,EN)"`";;
+    default) echo "`_ "Default"`";;
+    nodeadkeys) echo "`_ "Without dead keys"`";;
+    *) echo "`_ "Without dead keys"`";;
+  esac
+}
+
+write_kbd(){
+  while read name;do
+    name="${name##*/}"
+    name="${name%%.xkb}"
+    write_enum_item "$name" "$(write_layout "$name")"
+  done
+}
+
+default_kbd(){
+    shell_config_get "$KBDDIR/kbdlist" ${in_language%%;*} '[[:space:]]\+'
+}
+
+# sysconfig-language stuff
+
+write_locale(){
+  local l="$1";shift
+  [ "$l" != "POSIX" ] && echo "$l.$po_charset" || echo "$l"
+}
+
+# message loop
+
+on_message(){
+  case $in__objects in
+    font)
+      case "$in_action" in
+        write)
+          #TODO: use language information
+          cp -af "$ALTCONFDIR/consolefont" "$SYSCONFDIR/consolefont"
+        ;;
+      esac
+    ;;
+    kbd)
+      case "$in_action" in
+        read)
+          write_string_param layout "$(default_kbd)"
+        ;;
+        list)
+          local language="${in_language%%;*}"
+          [ -d "$KBDDIR/$language" ] &&
+            find "$KBDDIR/$language" -name '*.xkb'|write_kbd
+        ;;
+        write)
+          local language=${in_language%%;*}
+          local path="$KBDDIR/$language/$in_layout"
+          install -Dpm644 "$path.xkb" "$XKB_CONFIG" &&
+          install -Dpm644 "$path.kbd" "$KBD_CONFIG" &&
+          /usr/bin/setxkbmap -option "" &&
+          /usr/bin/setxkbmap `cat "$XKB_CONFIG"`
+        ;;
+      esac
+    ;;
+    language)
+      case "$in_action" in
+        list)
+          local lang_file=
+          if [ -n "$LANG" -a "$LANG" != "POSIX" -a "$LANG" != "C" ]; then
+            lang_file="$langlist.$(printf %s "$LANG" |
+              sed -r -e 's,[a-z]+_([^\.]+)(\..*)?,\1,' |
+              tr '[:upper:]' '[:lower:]')"
+          fi
+          [ -s "$lang_file" ] || lang_file="$langlist.all"
+          write_enum <"$lang_file"
+        ;;
+        write)
+          mkdir -p -- "${i18n_conf%/*}"
+          mkdir -p -- "${langmap_conf%/*}"
+          mkdir -p -- "${rpm_conf%/*}"
+
+          local firstlang="${in_lang%%;*}"
+
+          printf 'LANG=%s\n' "$(write_locale "$firstlang")">"$i18n_conf"
+
+          if echo "$in_language" | fgrep -qs ';'; then
+            printf 'SUPPORTED=%s\n' "$(write_language "$in_language")">>"$i18n_conf"
+            printf '%s\n' "$(write_language "$in_language")">"$langmap_conf"
+          else
+            printf 'SUPPORTED=%s\n' "$(write_locale "$firstlang")">>"$i18n_conf"
+          fi
+
+          sed 's,^%_install_langs[[:space:]].*,%_install_langs all,' -i "$rpm_conf"
+        ;;
+      esac
+    ;;
+  esac
+}
+
+message_loop
