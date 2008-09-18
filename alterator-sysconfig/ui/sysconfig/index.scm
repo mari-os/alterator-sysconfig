@@ -11,7 +11,7 @@
   (woo-catch/message
    (thunk
     (and-let* ((lang (current-language)))
-      (woo-write "/syslang" 'lang lang)
+      (woo-write "/sysconfig/language" 'lang lang)
       (simple-notify document:root 'action "language" 'value lang)
       #t))))
 
@@ -38,7 +38,7 @@
   (with-translation _ "alterator-sysconfig"
     (label1 text (_ "Select your language:"))
     (label2 text (_ "Please select keyboard switch type:"))
-    (keyboard-type enumref "/syskbd")
+    (keyboard-type enumref "/sysconfig/kbd")
   ))
 
 (define (default-language)
@@ -51,13 +51,13 @@
 (define (write-keyboard)
   (woo-catch/message
     (thunk
-      (woo-write "/sysfont");;save console font
+      (woo-write "/sysconfig/font");;save console font
       (and-let* ((kbd (keyboard-type value)));;save console and X11 keyboard layout
-        (woo-write "/syskbd/" 'layout kbd))
+        (woo-write "/sysconfig/kbd/" 'layout kbd))
       #t)))
 
 (define (default-keyboard)
-  (keyboard-type value (woo-get-option (woo-read-first "/syskbd") 'layout))
+  (keyboard-type value (woo-get-option (woo-read-first "/sysconfig/kbd") 'layout))
   (or (positive? (keyboard-type current))
       (keyboard-type current 0)))
 
@@ -90,10 +90,10 @@
 
 (document:root (when loaded (woo-catch/message
   (thunk
-    (langlist enumref "/syslang"
+    (langlist enumref "/sysconfig/language"
               value (default-language)
               selected)
-    (keyboard-type enumref "/syskbd")
+    (keyboard-type enumref "/sysconfig/kbd")
     (let ((len (keyboard-type count)))
       (and (positive? len) (default-keyboard))
       (and (= len 1) (write-keyboard)))
