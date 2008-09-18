@@ -45,6 +45,11 @@
   (define-operation get-lang)
   (string-join (get-lang (fluid-ref generic-session)) ":"))
 
+(define (update-lang)
+  (change-translations)
+  (let ((len (keyboard-type count)))
+      (and (positive? len) (default-keyboard))
+      (and (= len 1) (write-keyboard))))
 
 ;;; keyboard stuff
 
@@ -71,7 +76,7 @@
   (spacer)
 
   (spacer)
-  (document:id langlist (listbox (when selected (change-translations))))
+  (document:id langlist (listbox (when selected (update-lang))))
   (spacer)
 
   (spacer)
@@ -88,13 +93,12 @@
 
 (frame:on-next (thunk (or (write-keyboard) (write-language) 'cancel)))
 
+
+
 (document:root (when loaded (woo-catch/message
   (thunk
     (langlist enumref "/sysconfig/language"
               value (default-language)
               selected)
     (keyboard-type enumref "/sysconfig/kbd")
-    (let ((len (keyboard-type count)))
-      (and (positive? len) (default-keyboard))
-      (and (= len 1) (write-keyboard)))
   ))))
