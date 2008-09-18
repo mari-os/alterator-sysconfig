@@ -25,16 +25,21 @@
 
   ;;wizardface specific hacks
   (with-translation _ "alterator-wizard"
-                    (let ((wizard-id (global 'frame:wizard)))
-                      (wizard-id steps-clear)
-                      (wizard-id steps (map label+icon (woo-list "/step-list")))
-                      (wizard-id current-step 0)
-                      (wizard-id action-text 'help (_ "Help"))
-                      (wizard-id action-text 'forward (_ "Next"))))
+    (let ((wizard-id (global 'frame:wizard)))
+      (if wizard-id
+        (begin
+          (wizard-id steps-clear)
+          (wizard-id steps (map label+icon (woo-list "/step-list")))
+          (wizard-id current-step 0)
+          (wizard-id action-text 'help (_ "Help"))
+          (wizard-id action-text 'forward (_ "Next"))))))
 
   ;;common hacks
   (with-translation _ "alterator-sysconfig"
-                    (label-choose text (_ "Select your language:"))))
+    (label1 text (_ "Select your language:"))
+    (label2 text (_ "Please select keyboard switch type:"))
+    (keyboard-type enumref "/syskbd")
+  ))
 
 (define (default-language)
   (define-operation get-lang)
@@ -62,21 +67,24 @@
   columns "30;40;30"
 
   (spacer)
-  (label (_ "Please select keyboard switch type:"))
-  (spacer)
-
-  (spacer)
-  (document:id keyboard-type (listbox))
-  (spacer)
-
-  (spacer)
-  (document:id label-choose (label "Select your language:"))
+  (document:id label1 (label "Select your language:"))
   (spacer)
 
   (spacer)
   (document:id langlist (listbox (when selected (change-translations))))
-  (spacer))
+  (spacer)
 
+  (spacer)
+  (label "")
+  (spacer)
+
+  (spacer)
+  (document:id label2 (label "Please select keyboard switch type:"))
+  (spacer)
+
+  (spacer)
+  (document:id keyboard-type (listbox))
+  (spacer))
 
 (frame:on-next (thunk (or (write-keyboard) (write-language) 'cancel)))
 
@@ -88,6 +96,5 @@
     (keyboard-type enumref "/syskbd")
     (let ((len (keyboard-type count)))
       (and (positive? len) (default-keyboard))
-      (and (= len 1) (write-keyboard))
-      (and (<= len 1) (frame:skip)))
+      (and (= len 1) (write-keyboard)))
   ))))
