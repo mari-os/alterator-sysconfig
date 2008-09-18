@@ -1,7 +1,7 @@
 (document:surround "/std/frame")
 (document:insert "/std/functions")
 
-;;; Helpers
+;;; language stuff
 
 (define (current-language)
   (and-let* ((l (langlist value)))
@@ -40,32 +40,54 @@
   (define-operation get-lang)
   (string-join (get-lang (fluid-ref generic-session)) ":"))
 
-;;; UI
+
+;;; keyboard stuff
+
+(define (write-keyboard)
+  (woo-catch/message
+    (thunk
+      (woo-write "/sysfont");;save console font
+      (and-let* ((kbd (keyboard-type value)));;save console and X11 keyboard layout
+        (woo-write "/syskbd/" 'layout kbd))
+      #t)))
+
+(define (default-keyboard)
+  (keyboard-type value (woo-get-option (woo-read-first "/syskbd") 'layout))
+  (or (positive? (keyboard-type current))
+      (keyboard-type current 0)))
+
+;;;;;;;;;;;;
 
 (gridbox
   columns "30;40;30"
-  ;;
+
+  (spacer)
+  (label (_ "Please select keyboard switch type:"))
+  (spacer)
+
+  (spacer)
+  (document:id keyboard-type (listbox))
+  (spacer)
+
   (spacer)
   (document:id label-choose (label "Select your language:"))
   (spacer)
 
-  ;;
   (spacer)
-  (document:id langlist
-	       (listbox (when selected
-			  (change-translations))
-			(when double-clicked
-			  (frame:next))))
+  (document:id langlist (listbox (when selected (change-translations))))
   (spacer))
 
-;;; Logic
 
-(frame:on-next (thunk (or (write-language) 'cancel)))
+(frame:on-next (thunk (or (write-keyboard) (write-language) 'cancel)))
 
-(document:root
- (when loaded
-   (woo-catch/message
-    (thunk
-      (langlist enumref "/syslang"
-                value (default-language)
-                selected)))))
+(document:root (when loaded (woo-catch/message
+  (thunk
+    (langlist enumref "/syslang"
+              value (default-language)
+              selected)
+    (keyboard-type enumref "/syskbd")
+    (let ((len (keyboard-type count)))
+      (and (positive? len) (default-keyboard))
+      (and (= len 1) (write-keyboard))
+      (and (<= len 1) (frame:skip)))
+  ))))
