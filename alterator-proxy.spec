@@ -2,7 +2,7 @@
 
 Name: alterator-proxy
 Version: 0.4.3
-Release: alt1
+Release: alt2
 
 Summary: alterator module for client-side proxy configuration
 License: GPL
@@ -45,6 +45,9 @@ to "notice" the updated environment.
 # - verify constraints after quick fix
 
 %changelog
+* Fri Sep 19 2008 Vladislav Zavjalov <slazav@altlinux.org> 0.4.3-alt2
+- change label in desktop-file (Proxy settings -> Proxy server)
+
 * Mon Aug 18 2008 Michael Shigorin <mike@altlinux.org> 0.4.3-alt1
 - fix for current alterator changes
 
