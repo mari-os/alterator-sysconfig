@@ -27,8 +27,7 @@
   ;;common hacks
   (let ((_ (make-translator "alterator-sysconfig" (session-language))))
     (label1 text (_ "Select your language:"))
-    (label2 text (_ "Please select keyboard switch type:"))
-    (keyboard-type enumref "/sysconfig/kbd")))
+    (label2 text (_ "Please select keyboard switch type:"))))
 
 (define (default-language)
   (define-operation get-lang)
@@ -36,8 +35,8 @@
 
 (define (update-lang)
   (change-translations)
-  (let ((len (keyboard-type count)))
-      (and (positive? len) (default-keyboard))))
+  (keyboard-type enumref "/sysconfig/kbd")
+  (and (positive? (keyboard-type count)) (default-keyboard)))
 
 ;;; keyboard stuff
 
@@ -80,5 +79,4 @@
       (lambda()
 	(langlist enumref "/sysconfig/language"
 		  value (default-language)
-		  selected)
-	(keyboard-type enumref "/sysconfig/kbd")))))
+		  selected)))))
