@@ -8,12 +8,12 @@
     (string-cut l #\:)))
 
 (define (write-language)
-  (woo-catch/message
-   (thunk
-    (and-let* ((lang (current-language)))
-      (woo-write "/sysconfig/language" 'lang lang)
-      (simple-notify document:root 'action "language" 'value lang)
-      #t))))
+  (catch/message
+    (lambda()
+      (and-let* ((lang (current-language)))
+		(woo-write "/sysconfig/language" 'lang lang)
+		(simple-notify document:root 'action "language" 'value lang)
+		#t))))
 
 (define (label+icon x)
   (cons (woo-get-option x 'label)
@@ -24,22 +24,19 @@
   (set-lang (fluid-ref generic-session) (current-language))
 
   ;;wizardface specific hacks
-  (with-translation _ "alterator-wizard"
-    (let ((wizard-id (global 'frame:wizard)))
-      (if wizard-id
-        (begin
-          (wizard-id steps-clear)
-          (wizard-id steps (map label+icon (woo-list "/step-list")))
-          (wizard-id current-step 0)
-          (wizard-id action-text 'help (_ "Help"))
-          (wizard-id action-text 'forward (_ "Next"))))))
+  (let ((wizard-id (global 'frame:wizard)))
+    (if wizard-id
+      (begin
+	(wizard-id steps-clear)
+	(wizard-id steps (map label+icon (woo-list "/step-list")))
+	(wizard-id current-step 0)
+	(wizard-id action-text 'help (_ "Help" "alterator-wizard"))
+	(wizard-id action-text 'forward (_ "Next" "alterator-wizard")))))
 
   ;;common hacks
-  (with-translation _ "alterator-sysconfig"
-    (label1 text (_ "Select your language:"))
-    (label2 text (_ "Please select keyboard switch type:"))
-    (keyboard-type enumref "/sysconfig/kbd")
-  ))
+  (label1 text (_ "Select your language:" "alterator-sysconfig"))
+  (label2 text (_ "Please select keyboard switch type:" "alterator-sysconfig"))
+  (keyboard-type enumref "/sysconfig/kbd"))
 
 (define (default-language)
   (define-operation get-lang)
@@ -54,11 +51,10 @@
 ;;; keyboard stuff
 
 (define (write-keyboard)
-  (woo-catch/message
-    (thunk
-      (woo-write "/sysconfig/font");;save console font
+  (catch/message
+    (lambda()
       (and-let* ((kbd (keyboard-type value)));;save console and X11 keyboard layout
-        (woo-write "/sysconfig/kbd/" 'layout kbd))
+		(woo-write "/sysconfig/kbd/" 'layout kbd))
       #t)))
 
 (define (default-keyboard)
@@ -72,19 +68,17 @@
   columns "30;40;30"
 
   (spacer)
-  (document:id label1 (label "Select your language:"))
+  (document:id label1 (label text "Select your language:"))
   (spacer)
 
   (spacer)
   (document:id langlist (listbox (when selected (update-lang))))
   (spacer)
 
-  (spacer)
-  (label "")
-  (spacer)
+  (label colspan 3)
 
   (spacer)
-  (document:id label2 (label "Please select keyboard switch type:"))
+  (document:id label2 (label text "Please select keyboard switch type:"))
   (spacer)
 
   (spacer)
@@ -93,12 +87,12 @@
 
 (frame:on-next (thunk (or (write-keyboard) (write-language) 'cancel)))
 
+(document:root
+  (when loaded
+    (catch/message
+      (lambda()
+	(langlist enumref "/sysconfig/language"
+		  value (default-language)
+		  selected)
+	(keyboard-type enumref "/sysconfig/kbd")))))
 
-
-(document:root (when loaded (woo-catch/message
-  (thunk
-    (langlist enumref "/sysconfig/language"
-              value (default-language)
-              selected)
-    (keyboard-type enumref "/sysconfig/kbd")
-  ))))

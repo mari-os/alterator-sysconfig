@@ -31,7 +31,7 @@ write_layout(){
     ctrl_shift_toggle_ru_ua) echo "`_ "Control+Shift keys (UK,RU,EN)"`";;
     default) echo "`_ "Default"`";;
     nodeadkeys) echo "`_ "Without dead keys"`";;
-    *) echo "`_ "Without dead keys"`";;
+    *) echo "$1";;
   esac
 }
 
@@ -54,18 +54,13 @@ write_locale(){
   [ "$l" != "POSIX" ] && echo "$l.$po_charset" || echo "$l"
 }
 
-# message loop
+### initial actions
+shell_config_set "$SYSCONFDIR/consolefont" UniCyrExt_8x16
+
+### message loop
 
 on_message(){
   case $in__objects in
-    font)
-      case "$in_action" in
-        write)
-          #TODO: use language information
-          cp -af "$ALTCONFDIR/consolefont" "$SYSCONFDIR/consolefont"
-        ;;
-      esac
-    ;;
     kbd)
       case "$in_action" in
         read)
