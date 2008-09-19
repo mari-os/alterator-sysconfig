@@ -7,14 +7,6 @@
   (and-let* ((l (langlist value)))
     (string-cut l #\:)))
 
-(define (write-language)
-  (catch/message
-    (lambda()
-      (and-let* ((lang (current-language)))
-		(woo-write "/sysconfig/language" 'lang lang)
-		(simple-notify document:root 'action "language" 'value lang)
-		#t))))
-
 (define (label+icon x)
   (cons (woo-get-option x 'label)
         (woo-get-option x 'icon)))
@@ -50,17 +42,20 @@
 
 ;;; keyboard stuff
 
-(define (write-keyboard)
-  (catch/message
-    (lambda()
-      (and-let* ((kbd (keyboard-type value)));;save console and X11 keyboard layout
-		(woo-write "/sysconfig/kbd/" 'layout kbd))
-      #t)))
-
 (define (default-keyboard)
   (keyboard-type value (woo-get-option (woo-read-first "/sysconfig/kbd") 'layout))
   (or (positive? (keyboard-type current))
       (keyboard-type current 0)))
+
+(define (write-sysconfig)
+  (catch/message
+    (lambda()
+      (let ((lang (current-language))
+	    (kbd (keyboard-type value)))
+	(woo-write "/sysconfig/language" 'lang lang)
+	(woo-write "/sysconfig/kbd" 'layout kbd)
+	(simple-notify document:root 'action "language" 'value lang)
+	#t))))
 
 ;;;;;;;;;;;;
 
@@ -78,7 +73,7 @@
 
   (document:id keyboard-type (listbox)))
 
-(frame:on-next (thunk (or (write-keyboard) (write-language) 'cancel)))
+(frame:on-next (thunk (or (write-sysconfig) 'cancel)))
 
 (document:root
   (when loaded
@@ -88,4 +83,3 @@
 		  value (default-language)
 		  selected)
 	(keyboard-type enumref "/sysconfig/kbd")))))
-
