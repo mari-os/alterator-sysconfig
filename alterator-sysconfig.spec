@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.8
-Release: alt1
+Release: alt2
 
 Requires: alterator-sh-functions
 
@@ -52,6 +52,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Fri Sep 19 2008 Stanislav Ievlev <inger@altlinux.org> 0.8-alt2
+- bugfix
+
 * Thu Sep 18 2008 Vladislav Zavjalov <slazav@altlinux.org> 0.8-alt1
 - Merge all interfaces and all backeends (keep old versions)
 
