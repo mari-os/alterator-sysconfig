@@ -72,12 +72,16 @@ on_message(){
             find "$KBDDIR/$language" -name '*.xkb'|write_kbd
         ;;
         write)
-          local language=${in_language%%;*}
-          local path="$KBDDIR/$language/$in_layout"
-          install -Dpm644 "$path.xkb" "$XKB_CONFIG" &&
-          install -Dpm644 "$path.kbd" "$KBD_CONFIG" &&
-          /usr/bin/setxkbmap -option "" &&
-          /usr/bin/setxkbmap `cat "$XKB_CONFIG"`
+          local language="${in_language%%;*}"
+          if [ -n "$in_layout" ]; then
+            local path="$KBDDIR/$language/$in_layout"
+	    install -Dpm644 "$path.xkb" "$XKB_CONFIG" &&
+		install -Dpm644 "$path.kbd" "$KBD_CONFIG" &&
+		/usr/bin/setxkbmap -option "" &&
+		/usr/bin/setxkbmap `cat "$XKB_CONFIG"`
+	  else
+	    rm -f "$KBD_CONFIG" "$XKB_CONFIG"
+	  fi
         ;;
       esac
     ;;

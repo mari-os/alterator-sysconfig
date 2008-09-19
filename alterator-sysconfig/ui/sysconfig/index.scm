@@ -37,8 +37,7 @@
 (define (update-lang)
   (change-translations)
   (let ((len (keyboard-type count)))
-      (and (positive? len) (default-keyboard))
-      (and (= len 1) (write-keyboard))))
+      (and (positive? len) (default-keyboard))))
 
 ;;; keyboard stuff
 
