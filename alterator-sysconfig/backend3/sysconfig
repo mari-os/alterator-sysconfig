@@ -55,7 +55,7 @@ write_locale(){
 }
 
 ### initial actions
-shell_config_set "$SYSCONFDIR/consolefont" UniCyrExt_8x16
+shell_config_set "$SYSCONFDIR/consolefont" SYSFONT UniCyrExt_8x16
 
 ### message loop
 
