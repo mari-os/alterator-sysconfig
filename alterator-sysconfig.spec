@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.8
-Release: alt3
+Release: alt4
 
 Requires: alterator-sh-functions
 
@@ -52,6 +52,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Fri Oct 24 2008 Stanislav Ievlev <inger@altlinux.org> 0.8-alt4
+- fix old sysfont backend
+
 * Mon Sep 22 2008 Stanislav Ievlev <inger@altlinux.org> 0.8-alt3
 - update Russian keyboard layouts
 

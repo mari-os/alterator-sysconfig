@@ -2,8 +2,8 @@
 
 alterator_api_version=1
 . alterator-sh-functions
+. shell-config
 
-DATADIR=/etc/alterator/sysconfig/
 CONFIGDIR=/etc/sysconfig/
 
 on_message()
@@ -11,7 +11,7 @@ on_message()
 	case "$in_action" in
 		write)
 			#TODO: use language information
-			cp -af "$DATADIR/consolefont" "$CONFIGDIR/consolefont"
+			shell_config_set "$CONFIGDIR/consolefont" SYSFONT UniCyrExt_8x16
 			;;
 	esac
 }
