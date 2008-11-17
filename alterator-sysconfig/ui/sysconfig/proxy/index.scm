@@ -130,7 +130,7 @@
 (define (read-proxy)
 	(let
 		(
-			(data (woo-read-first "/proxy" ))
+			(data (woo-read-first "/sysproxy" ))
 		)
 
 		(server text (woo-get-option data 'server))
@@ -145,7 +145,7 @@
 (define (write-proxy)
 	(woo-catch/message
 		(thunk
-			(woo-write/constraints "/proxy"
+			(woo-write "/sysproxy"
 				'server (server text)
 				'port (port text)
 				'login (login text)
@@ -162,7 +162,6 @@
 (document:root
 	(when loaded
 		(read-proxy)
-		;(update-constraints "read" "/proxy" 'enabled (proxy_enabled state))
 		(toggle-control-activity (proxy_enabled state) (widgets server port login password))
 	)
 )

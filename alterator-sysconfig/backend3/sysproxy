@@ -480,7 +480,7 @@ constraints() {
 
 ## MAIN ################################################################
 
-. /usr/share/alterator/build/backend3.sh
+. alterator-sh-functions
 
 if [ -n "$DEBUG" ]; then
 	deb_echo "=run:" "$$"

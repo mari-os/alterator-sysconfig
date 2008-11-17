@@ -8,8 +8,8 @@ Requires: alterator-sh-functions
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
-Provides: alterator-syskbd = %version
-Obsoletes: alterator-syskbd
+Provides: alterator-syskbd = %version, alterator-proxy = %version
+Obsoletes: alterator-syskbd, alterator-proxy
 
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
@@ -47,6 +47,7 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %files -f %name.lang
 %config(noreplace) %_sysconfdir/alterator/sysconfig
 %_datadir/alterator/ui/*/
+%_datadir/alterator/applications/*
 %_datadir/alterator/help/*/*
 %_alterator_backend3dir/*
 %_datadir/install2/preinstall.d/*
