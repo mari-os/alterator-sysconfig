@@ -1,0 +1,512 @@
+#!/bin/sh -ef
+
+. shell-quote
+# . alterator-sh-functions
+# . alterator-sh-debug
+
+## >alterator-sh-functions #############################################
+alterator_api_version="${alterator_api_version:-0}"
+
+. shell-error
+. shell-quote
+
+#-----------------------------------------------------------------------
+exec 3>&1
+[ "$alterator_api_version" -le 0 ] || exec 1>&2
+
+### INTERNAL FUNCTIONS #################################################
+
+#-----------------------------------------------------------------------
+_write_begin()
+{
+	printf "(\n" >&3
+}
+
+#-----------------------------------------------------------------------
+_write_end()
+{
+	printf ")\n" >&3
+}
+
+#-----------------------------------------------------------------------
+_validate_symbol()
+{
+	[ -n "${1##*[!0-9A-Za-z_]*}" ] || fatal "wrong attribute name:$1"
+}
+
+### STRING #############################################################
+
+#-----------------------------------------------------------------------
+string_quote()
+{
+	sed 's,[\"],\\&,g' -- "$@"
+}
+
+#-----------------------------------------------------------------------
+newline_unquote()
+{
+	if [ "$1" != "_objects" ]; then
+		local separator=$(printf '\007')
+		sed  -e "s,\\\\\(.\),$separator\1,g" \
+		-e "s,${separator}n,\n,g" \
+		-e "s,$separator,,g"
+	else
+		cat
+	fi
+}
+
+#-----------------------------------------------------------------------
+uppercase()
+{
+	echo -n $@ | tr [:lower:] [:upper:];
+}
+
+#-----------------------------------------------------------------------
+lowercase()
+{
+	echo -n $@ | tr [:upper:] [:lower:];
+}
+
+#-----------------------------------------------------------------------
+parenthesize()
+{
+	while read i; do
+		echo "(\"$i\")"
+	done;
+}
+
+### MAIN MESSAGE LOOP ##################################################
+
+#-----------------------------------------------------------------------
+_userhandler() {  # trick to protect loop values
+	local l= readmsg= params=
+	local IFS="$IFS" PATH="$PATH" # Protected variables
+	[ "$alterator_api_version" -le 0 ] || _write_begin
+	"${1:-on_message}" ||: # ignore exit code of user actions
+	[ "$alterator_api_version" -le 0 ] || _write_end
+}
+
+#-----------------------------------------------------------------------
+message_loop() {
+	local l= readmsg= params= name= value=
+	while read -r l; do
+		if [ "$l" != "${l#_message:begin}" ]; then
+			[ -n "$params" ] && unset $params params ||:
+			readmsg=1
+			continue
+		fi
+
+		if [ -n "$readmsg" -a "$l" != "${l#_message:end}" ]; then
+			_userhandler "$1"
+			readmsg=
+		fi
+
+		[ -n "$readmsg" ] || continue
+
+		name="$(printf %s\\n "${l%%:*}" | sed -e 's,[^[:alnum:]_],,g')" &&
+		value="$(printf %s\\n "${l#*:}" | newline_unquote "$name")" || continue
+		eval "in_$name=\"$(quote_shell "$value")\"" && params="$params in_$name" && name= value= ||:
+	done
+}
+
+### INPUT/OUTPUT FUNCTIONS #############################################
+
+#-----------------------------------------------------------------------
+write_string()
+{
+	local out="$*"
+	if [ -z "${out##*[\"\\\\]*}" ]; then
+		out="$(printf %s "$out" |string_quote)" ||
+		return 1
+	fi
+	printf %s "$out"
+}
+
+#-----------------------------------------------------------------------
+write_bool()
+{
+	case "$1" in
+		[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee]|[Oo][Nn]|[Yy]|1)
+			echo '#t'
+		;;
+		*)
+			echo '#f'
+		;;
+	esac
+}
+
+
+#-----------------------------------------------------------------------
+test_bool()
+{
+	[ "$1" = "#t" ]
+}
+
+
+### I18N SUPPORT #######################################################
+
+#-----------------------------------------------------------------------
+write_language()
+{
+	local charset="${po_charset:-UTF-8}"
+	echo "$1" |
+		sed -r \
+			-e "s,([^;]+)(;|$),\1.$charset\2,g" \
+			-e 's,;,:,g'
+}
+
+#-----------------------------------------------------------------------
+#Note: gettext uses encoding from lc_ctype and translation from language
+po_domain="${po_domain:-alterator-${0##*/}}"
+
+#-----------------------------------------------------------------------
+_()
+{
+	local domain="${2:-$po_domain}"
+	local langlist="$(write_language "$in_language")"
+	local firstlang="${langlist%%:*}"
+
+	LC_ALL="$firstlang" LANGUAGE="$langlist" gettext "$domain" "$1"
+}
+
+### HIGH LEVEL OUTPUT ##################################################
+
+#-----------------------------------------------------------------------
+write_string_param()
+{
+	_validate_symbol "$1"
+	printf '%s "%s"\n' "$1" "$(write_string "$2")" >&3
+}
+
+#-----------------------------------------------------------------------
+write_bool_param()
+{
+	_validate_symbol "$1"
+	printf '%s %s\n' "$1" "$(write_bool "$2")" >&3
+}
+
+#-----------------------------------------------------------------------
+write_enum_item()
+{
+	if [ $# -eq 0 ];then
+		echo "WARNING: write_enum_item for stream is deprecated, use write_enum instead" >&2
+		string_quote | while read -r name label; do
+			[ -n "$name" ] || continue
+			printf '(name "%s" label "%s")\n' \
+				"$name" \
+				"${label:-$name}"
+		done
+	else
+		printf '(name "%s" label "%s")\n' \
+			"$(write_string "$1")" \
+			"$(write_string "${2:-$1}")"
+	fi >&3
+}
+
+#-----------------------------------------------------------------------
+write_enum()
+{
+	string_quote | while read -r name label; do
+		[ -n "$name" ] || continue
+		printf '(name "%s" label "%s")\n' \
+			"$name" \
+			"${label:-$name}"
+	done >&3
+}
+
+#-----------------------------------------------------------------------
+write_table_item()
+{
+	[ $# -gt 0 -a "$(($# % 2))" = "0" ] || fatal "wrong number of arguments"
+
+	printf '(' >&3
+	while [ $# -gt 0 ]; do
+		local name="$1"; shift
+		local value="$1"; shift
+		_validate_symbol "$name"
+		printf ' %s "%s"' "$name" "$(write_string "$value")" >&3
+	done
+	printf ')' >&3
+}
+
+#-----------------------------------------------------------------------
+write_error()
+{
+	[ "$alterator_api_version" -gt 0 ] || _write_begin
+	write_string_param 'error' "$1"
+	[ "$alterator_api_version" -gt 0 ] || _write_end
+}
+
+#-----------------------------------------------------------------------
+write_nop()
+{
+	[ "$alterator_api_version" -gt 0 ] || _write_begin
+	[ "$alterator_api_version" -gt 0 ] || _write_end
+}
+
+#-----------------------------------------------------------------------
+write_lpar() {
+	echo '(' >&3
+}
+
+#-----------------------------------------------------------------------
+write_rpar() {
+	echo ')' >&3
+}
+
+#-----------------------------------------------------------------------
+write_debug()
+{
+	[ -z "$DEBUG" ] || printf "$@" >&2
+}
+
+### BACKWARD COMPATIBILITY: API_VERSION < 0 ############################
+alias simple_quote=string_quote
+## <alterator-sh-functions #############################################
+
+## >alterator-sh-debug #################################################
+MODULE=`basename $0`
+LOGFILE="$HOME/tmp/$MODULE-debug.log"
+ERRFILE="$HOME/tmp/$MODULE-errors.log"
+
+### DEBUG ##############################################################
+
+#-----------------------------------------------------------------------
+_deb_time()
+{
+	if [ -n "$DEBUG" ]; then
+		echo -n "$(date +"%F %T"): " >> $LOGFILE
+	fi
+}
+#-----------------------------------------------------------------------
+deb_echo()
+{
+	if [ -n "$DEBUG" ]; then
+	_deb_time
+		echo "$@" >> $LOGFILE
+	fi
+}
+
+#-----------------------------------------------------------------------
+deb_printf()
+{
+	if [ -n "$DEBUG" ]; then
+	_deb_time
+		printf "$@" >> $LOGFILE
+		echo >> $LOGFILE
+	fi
+}
+
+#-----------------------------------------------------------------------
+deb_caller()
+{
+	if [ -n "$DEBUG" ]; then
+		deb_echo '=call:' $(caller 0)
+		deb_echo '=from:' $(caller 1)
+		if [ "$#" -gt 0 ]; then
+			deb_echo '=params:' "$@"
+		fi
+	fi
+}
+
+#-----------------------------------------------------------------------
+deb_tee()
+{
+	fun=$1; shift
+
+	if [ -n "$DEBUG" ]; then
+		_deb_time
+		$fun "$@" | tee -a $LOGFILE
+		echo >> $LOGFILE
+	else
+		$fun "$@"
+	fi
+}
+
+### ALIASES ############################################################
+alias write_debug=deb_printf
+## <alterator-sh-debug #################################################
+
+
+#DEBUG="on"
+
+if [ "$DEBUG" = "on" ]; then
+	SETTINGS=$HOME/tmp/proxy.sh
+else
+	SETTINGS=/etc/profile.d/proxy.sh
+fi
+
+VARS="https_proxy http_proxy ftp_proxy HTTPS_PROXY HTTP_PROXY FTP_PROXY"
+DISA="disabled_login disabled_password disabled_server disabled_port"
+#DEFPORT=3128
+
+## shell file helpers ##################################################
+
+#-----------------------------------------------------------------------
+shell_add_or_subst() {
+	deb_caller "$@"
+	local name="$1" && shift
+	local value="$1" && shift
+	local file="$1" && shift
+
+	[ -f "$file" ] || touch "$file"
+	if grep -qs "^$name" "$file"; then
+		sed -r -i "s,^$name.*,$name\"$value\"," -- "$file"
+		return 0
+	fi
+	echo "$name\"$value\"" >> "$file"
+}
+
+## PROXY SETTINGS HELPERS ##############################################
+
+#-----------------------------------------------------------------------
+read_settings() {
+	deb_caller "$@"
+	# SourceIfNotEmpty...
+	[ -s "$SETTINGS" -a -x "$SETTINGS" ] && . "$SETTINGS"
+
+	if [ -n "$disabled_server" ]; then
+		disabled_login=`echo $disabled_login | sed 's/[^a-z0-9_-]//g'`
+		disabled_password=$(quote_shell $disabled_password)
+		disabled_server=`echo $disabled_server | sed 's/[^a-zA-Z0-9.-]//g'`
+		disabled_port=`echo $disabled_port | sed 's/[^0-9]//g'`
+
+		write_lpar
+		echo 'enabled #f'
+		printf 'server "%s"' "$disabled_server"
+		printf 'port "%s"' "$disabled_port"
+		[ -n "$disabled_login" ] && {
+			echo 'auth #t'
+			printf 'login "%s"' "$disabled_login"
+			printf 'password "%s"' "$disabled_password"
+		} || echo 'auth #f'
+		write_rpar
+	else
+		# fallbacks
+		[ -n "$ftp_proxy" -a -z "$http_proxy" ] && http_proxy="$ftp_proxy"
+		[ -n "$https_proxy" -a -z "$http_proxy" ] && http_proxy="$https_proxy"
+		[ -n "$HTTP_PROXY" -a -z "$http_proxy" ] && http_proxy="$HTTP_PROXY"
+		[ -n "$HTTPS_PROXY" -a -z "$http_proxy" ] && http_proxy="$HTTPS_PROXY"
+		[ -n "$FTP_PROXY" -a -z "$http_proxy" ] && http_proxy="$FTP_PROXY"
+
+		# parse [user:pass@]server:port to begin with
+		PROXY="`echo $http_proxy | sed \
+		's,^\(http://\)\?\([a-zA-Z0-9._-]\+:\?[^@]\+@\)\?\([a-zA-Z0-9.-]\+\)\(:[0-9]\+\)\?/\?$,\3\4 \2,i'`"
+
+		write_lpar
+
+		[ -n "$PROXY" ] && echo "$PROXY" | (IFS=':@ ' read server port login password
+			#[ -n "$PORT" ] || PORT=$DEFPORT
+			echo 'enabled #t'
+			printf 'server "%s"' "$server"
+			printf 'port "%s"' "$port"
+			[ -n "$login" ] && {
+				echo 'auth #t'
+				printf 'login "%s"' "$login"
+				printf 'password "%s"' $(quote_shell "$password")
+			} || echo 'auth #f'
+		) || echo 'enabled #f'
+
+		write_rpar
+
+	fi
+
+}
+
+#-----------------------------------------------------------------------
+write_settings() {
+	deb_caller "$@"
+
+	in_login=`echo $in_login | sed 's/[^a-z0-9_-]//g'`
+	in_password=$(quote_shell $(quote_shell $in_password))
+	in_server=`echo $in_server | sed 's/[^a-zA-Z0-9.-]//g'`
+	in_port=`echo $in_port | sed 's/[^0-9]//g'`
+
+	touch "$SETTINGS"
+
+	if [ -z "$in_enabled" -o "$in_enabled" = "#f" ]; then
+		shell_add_or_subst "disabled_login=" "$in_login" "$SETTINGS"
+		shell_add_or_subst "disabled_password=" "$in_password" "$SETTINGS"
+		shell_add_or_subst "disabled_server=" "$in_server" "$SETTINGS"
+		shell_add_or_subst "disabled_port=" "$in_port" "$SETTINGS"
+
+		for var in $VARS; do
+			shell_add_or_subst "export $var=" "" "$SETTINGS"
+		done
+	else
+		for var in $DISA; do
+			shell_add_or_subst "$var=" "" "$SETTINGS"
+		done
+
+		local AUTH=
+		local PROXY=
+
+		[ -z "$in_login" ] || AUTH="$in_login$([ -n "$in_password" ] && echo ":$in_password")@"
+		[ -z "$in_server" ] || PROXY="http://$AUTH$in_server:$in_port/"
+
+		for var in $VARS; do
+			shell_add_or_subst "export $var=" "$PROXY" "$SETTINGS"
+		done
+	fi
+
+	chmod 0755 "$SETTINGS"
+
+	write_nop
+}
+
+#-----------------------------------------------------------------------
+constraints() {
+	deb_caller "$@"
+
+	local required="$([ -n "$in_password" ] && echo '#t' || echo '#f')"
+
+	write_lpar
+	if [ -z "$in_enabled" -o "$in_enabled" = "#f" ]; then
+		printf 'enabled (exclude (#t server) exclude (#t port) exclude (#t login) exclude (#t password))'
+	else
+		printf 'server (required #t match ("^[a-zA-Z0-9.-]+$" "%s") label "%s")' \
+			"`_ "invalid proxy hostname"`" \
+			"`_ "Server"`"
+		printf 'port  (required #t match ("^[0-9]+$"  "%s") default "3128" label "%s")' \
+			"`_ "should be a number"`" \
+			"`_ "Port"`"
+		printf 'login (required %s match ("^([a-z_][a-z0-9_-]*)?$" "%s") label "%s")' \
+			$required \
+			"`_ "only small latin letters, digits and '_' allowed"`" \
+			"`_ "Login"`"
+	fi
+	write_rpar
+}
+
+## MAIN ################################################################
+
+. /usr/share/alterator/build/backend3.sh
+
+if [ -n "$DEBUG" ]; then
+	deb_echo "=run:" "$$"
+fi
+
+#-----------------------------------------------------------------------
+on_message() {
+	if [ -n "$DEBUG" ]; then
+		deb_echo '==================================================='
+		deb_caller "$@"
+		deb_echo '=env:' $(set | grep "^in_")
+	fi
+
+	case "$in_action" in
+		constraints)
+			constraints;;
+		list)
+			write_nop;;
+		read)
+			read_settings;;
+		write)
+			write_settings;;
+		*)
+			write_bool "true";;
+	esac
+}
+
+#***********************************************************************
+message_loop
