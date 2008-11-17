@@ -16,8 +16,8 @@
   (label "Login:" align "right" name "login")
   (edit colspan 3 name "login")
 
-  (label "Password:" align "right" name "password")
-  (edit colspan 3 name "password")
+  (label "Password:" align "right" name "passwd")
+  (edit colspan 3 name "passwd" echo "stars")
 
   (label colspan 4)
 
