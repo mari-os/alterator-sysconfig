@@ -26,7 +26,8 @@
     colspan 3
     align "left"
     (button "Apply"
-	    (when clicked (form-write/message "/sysproxy")))
+	    (when clicked (form-write/message "/sysproxy")
+	                  (form-read/message "/sysproxy")))
     (button "Reset"
 	    (when clicked (form-read/message "/sysproxy")))))
 

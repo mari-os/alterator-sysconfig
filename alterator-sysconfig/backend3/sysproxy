@@ -9,6 +9,10 @@ proxy_conf_file=/etc/sysconfig/network
 on_message()
 {
     case "$in_action" in
+	type)
+	    write_type_item server hostname
+	    write_type_item port tcp-port
+	    ;;
 	read)
 	    local url="$(shell_config_get "$proxy_conf_file" HTTP_PROXY)"
 
@@ -17,12 +21,12 @@ on_message()
 	    local auth="${url%%@*}"
 	    [ "$auth" != "$url" ] || auth=""
 	    url="${url##*@}"
-	    local passwd="${auth##*:}"
-	    local login="${auth%%:*}"
+	    local passwd="$(decode-url-component "${auth##*:}")"
+	    local login="$(decode-url-component "${auth%%:*}")"
 
 	    port="${url##*:}"
 	    [ "$port" != "$url" ] || port=""
-	    url="${url%%:*}"
+	    url="$(decode-url-component ${url%%:*})"
 
 	    write_string_param server "$url"
 	    write_string_param port "$port"
@@ -31,9 +35,9 @@ on_message()
 	    ;;
 	write)
 	    if [ -n "$in_server" ]; then
-		local url="$in_server"
+		local url="$(encode-url-component "$in_server")"
 		[ -z "$in_login" -o -z "$in_passwd" ] ||
-		    url="$in_login:$in_passwd@$url"
+		    url="$(encode-url-component "$in_login"):$(encode-url-component "$in_passwd")@$url"
 		[ -z "$in_port" ] ||
 		    url="$url:$in_port"
 
