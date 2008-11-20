@@ -49,6 +49,7 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %files -f %name.lang
 %config(noreplace) %_sysconfdir/alterator/sysconfig
 %_datadir/alterator/ui/*/
+%_datadir/alterator/templates/*
 %_datadir/alterator/applications/*
 %_datadir/alterator/help/*/*
 %_alterator_backend3dir/*

@@ -1,7 +1,5 @@
 (document:surround "/std/frame")
 
-(po-domain "alterator-sysconfig")
-
 (gridbox
   columns "0;80;0;20"
   margin 40
@@ -13,7 +11,7 @@
 
   (label colspan 4)
 
-  (label "Login:" align "right" name "login")
+  (label "Account:" align "right" name "login")
   (edit colspan 3 name "login")
 
   (label "Password:" align "right" name "passwd")

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<!-- simple system update interface -->
+<html wf="form?backend-url=sysproxy">
+  <body>
+    <form method="POST">
+    <table>
+	<tr>
+	    <td style="text-align:right"><span translate="_">Proxy server:</span></td>
+	    <td><input type="text" class="text" name="server"/></td>
+	    <td><span translate="_">Port:</span></td>
+	    <td><input type="text" class="text" name="port"/></td>
+	</tr>
+	<tr>
+	    <td colspan="4">&nbsp;</td>
+	</tr>
+	<tr>
+	    <td style="text-align:right"><span translate="_">Account:</span></td>
+	    <td colspan="3"><input type="text" class="text" name="login"/></td>
+	</tr>
+	<tr>
+	    <td style="text-align:right"><span translate="_">Password:</span></td>
+	    <td colspan="3"><input type="password" class="text" name="passwd"/></td>
+	</tr>
+
+	<tr>
+	    <td colspan="4">&nbsp;</td>
+	</tr>
+
+	<tr>
+	    <td>&nbsp;</td>
+	    <td>
+		<input type="submit" class="btn" value="Apply"/>
+		&nbsp;
+		<input type="reset" class="btn" value="Reset"/>
+	    </td>
+	</tr>
+    </table>
+    </form>
+  </body>
+</html>
