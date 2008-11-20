@@ -44,6 +44,10 @@ on_message()
 		shell_config_set "$proxy_conf_file" HTTP_PROXY "http://$url"
 		shell_config_set "$proxy_conf_file" HTTPS_PROXY "https://$url"
 		shell_config_set "$proxy_conf_file" FTP_PROXY "ftp://$url"
+	    else
+		shell_config_set "$proxy_conf_file" HTTP_PROXY ""
+		shell_config_set "$proxy_conf_file" HTTPS_PROXY ""
+		shell_config_set "$proxy_conf_file" FTP_PROXY ""
 	    fi
 	    ;;
     esac
