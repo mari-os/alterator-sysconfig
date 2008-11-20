@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.8
-Release: alt4
+Version: 0.9
+Release: alt1
 
 Requires: alterator-sh-functions
 
@@ -53,6 +53,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Thu Nov 20 2008 Stanislav Ievlev <inger@altlinux.org> 0.9-alt1
+- join with alterator-proxy module
+
 * Fri Oct 24 2008 Stanislav Ievlev <inger@altlinux.org> 0.8-alt4
 - fix old sysfont backend
 
