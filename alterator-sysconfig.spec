@@ -27,10 +27,7 @@ Requires: alterator-sh-functions >= 0.6-alt2
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
 
-BuildPreReq: alterator >= 3.2-alt6
-
-# Automatically added by buildreq on Mon Jul 11 2005 (-bi)
-BuildRequires: alterator, alterator-l10n
+BuildPreReq: alterator >= 3.2-alt6, alterator-fbi, alterator-l10n
 
 %description
 alterator module for basic system settings ( console and X11 keyboard, console font, system locale)
