@@ -4,7 +4,7 @@ Name: alterator-sysconfig
 Version: 0.9
 Release: alt1
 
-Requires: alterator-sh-functions
+Requires: alterator-sh-functions, setup >= 2.2.12-alt1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
