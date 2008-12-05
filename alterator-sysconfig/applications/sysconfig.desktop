@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Categories=X-Alterator-Hidden
+Icon=proxy
+Terminal=false
+Name=System settings
+X-Alterator-URI=/sysconfig
+X-Alterator-Help=sysconfig

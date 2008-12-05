@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Categories=X-Alterator-Hidden
+Icon=proxy
+Terminal=false
+Name=Language Selection
+X-Alterator-URI=/sysconfig/language
+X-Alterator-Help=sysconfig-language

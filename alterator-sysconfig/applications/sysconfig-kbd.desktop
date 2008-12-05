@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Categories=X-Alterator-Hidden
+Icon=proxy
+Terminal=false
+Name=Keyboard settings
+X-Alterator-URI=/sysconfig/kbd
+X-Alterator-Help=sysconfig-kbd
