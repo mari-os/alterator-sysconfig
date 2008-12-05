@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 0.10
-Release: alt1
+Release: alt2
 
 Requires: alterator-sh-functions, setup >= 2.2.12-alt1
 
@@ -53,6 +53,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Fri Dec 05 2008 Vladislav Zavjalov <slazav@altlinux.org> 0.10-alt2
+- rebuild with new l10n
+
 * Fri Dec 05 2008 Stanislav Ievlev <inger@altlinux.org> 0.10-alt1
 - use help files from alterator-l10n
 - add pt_BR to language list
