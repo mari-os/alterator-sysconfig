@@ -1,7 +1,7 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 0.9
+Version: 0.10
 Release: alt1
 
 Requires: alterator-sh-functions, setup >= 2.2.12-alt1
@@ -53,6 +53,10 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Fri Dec 05 2008 Stanislav Ievlev <inger@altlinux.org> 0.10-alt1
+- use help files from alterator-l10n
+- add pt_BR to language list
+
 * Thu Nov 20 2008 Stanislav Ievlev <inger@altlinux.org> 0.9-alt1
 - join with alterator-proxy module
 
