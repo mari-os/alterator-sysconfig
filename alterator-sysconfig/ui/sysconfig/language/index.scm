@@ -46,7 +46,7 @@
   columns "30;40;30"
   ;;
   (spacer)
-  (document:id label-choose (label "Select your language:"))
+  (document:id label-choose (label text "Select your language:"))
   (spacer)
 
   ;;
