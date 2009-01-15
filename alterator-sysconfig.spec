@@ -23,6 +23,7 @@ Group: System/Configuration/Other
 
 Requires: alterator >= 3.5-alt1 vhttpd-utils >= 0.3-alt6
 Requires: alterator-sh-functions >= 0.6-alt2
+Requires: alterator-l10n >= 0.14-alt1
 
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
@@ -48,7 +49,6 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/alterator/ui/*/
 %_datadir/alterator/templates/*
 %_datadir/alterator/applications/*
-%_datadir/alterator/help/*/*
 %_alterator_backend3dir/*
 %_datadir/install2/preinstall.d/*
 
