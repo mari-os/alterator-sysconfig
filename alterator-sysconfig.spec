@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 1.0
-Release: alt1
+Release: alt2
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -52,6 +52,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Thu Jan 15 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt2
+- html: fix backend name
+
 * Thu Jan 15 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt1
 - remove obsolete sysconfig/lang and sysconfig/kbd interfaces
 - use help directly from alterator-l10n
