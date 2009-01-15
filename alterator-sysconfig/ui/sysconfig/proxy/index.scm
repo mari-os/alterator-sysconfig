@@ -24,11 +24,11 @@
     colspan 3
     align "left"
     (button (_ "Apply")
-	    (when clicked (form-write/message "/sysproxy")
-	                  (form-read/message "/sysproxy")))
+	    (when clicked (form-write/message "/sysconfig-proxy")
+	                  (form-read/message "/sysconfig-proxy")))
     (button (_ "Reset")
-	    (when clicked (form-read/message "/sysproxy")))))
+	    (when clicked (form-read/message "/sysconfig-proxy")))))
 
 (document:root
   (when loaded
-    (form-read/message "/sysproxy")))
+    (form-read/message "/sysconfig-proxy")))

@@ -35,13 +35,13 @@
 
 (define (update-lang)
   (change-translations)
-  (keyboard-type enumref "/sysconfig/kbd")
+  (keyboard-type enumref "/sysconfig-base/kbd")
   (and (positive? (keyboard-type count)) (default-keyboard)))
 
 ;;; keyboard stuff
 
 (define (default-keyboard)
-  (keyboard-type value (woo-get-option (woo-read-first "/sysconfig/kbd") 'layout))
+  (keyboard-type value (woo-get-option (woo-read-first "/sysconfig-base/kbd") 'layout))
   (or (positive? (keyboard-type current))
       (keyboard-type current 0)))
 
@@ -50,8 +50,8 @@
     (lambda()
       (let ((lang (current-language))
 	    (kbd (keyboard-type value)))
-	(woo-write "/sysconfig/language" 'lang lang)
-	(woo-write "/sysconfig/kbd" 'layout kbd)
+	(woo-write "/sysconfig-base/language" 'lang lang)
+	(woo-write "/sysconfig-base/kbd" 'layout kbd)
 	(simple-notify document:root 'action "language" 'value lang)
 	#t))))
 
@@ -77,6 +77,6 @@
   (when loaded
     (catch/message
       (lambda()
-	(langlist enumref "/sysconfig/language"
+	(langlist enumref "/sysconfig-base/language"
 		  value (default-language)
 		  selected)))))

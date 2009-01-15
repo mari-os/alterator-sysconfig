@@ -3,6 +3,8 @@
 # merge of all bakends (sysfont syskbd syslang) of alterator-sysconfig
 
 alterator_api_version=1
+po_domain="alterator-sysconfig"
+
 . alterator-sh-functions
 . shell-config
 
