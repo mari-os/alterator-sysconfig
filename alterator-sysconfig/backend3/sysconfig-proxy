@@ -36,7 +36,7 @@ on_message()
 	    ;;
 	write)
 	    if [ -n "$in_server" ]; then
-		local url="$(encode-url-component "$in_server")"
+		local url="$in_server"
 		[ -z "$in_login" -o -z "$in_passwd" ] ||
 		    url="$(encode-url-component "$in_login"):$(encode-url-component "$in_passwd")@$url"
 		[ -z "$in_port" ] ||
