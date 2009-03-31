@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 1.0
-Release: alt4
+Release: alt5
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -22,7 +22,7 @@ Group: System/Configuration/Other
 Requires: alterator-sh-functions, setup >= 2.2.12-alt1
 Requires: alterator >= 3.5-alt1 vhttpd-utils >= 0.3-alt6
 Requires: alterator-sh-functions >= 0.6-alt2
-Requires: alterator-l10n >= 0.14-alt1
+Requires: alterator-l10n >= 2.2-alt3
 
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
@@ -51,6 +51,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Tue Mar 31 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt5
+- use translations directly from alterator-l10n
+
 * Tue Mar 31 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt4
 - add some Spanish locales
 
