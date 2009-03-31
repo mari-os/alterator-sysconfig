@@ -27,7 +27,7 @@ Requires: alterator-l10n >= 0.14-alt1
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
 
-BuildPreReq: alterator >= 3.2-alt6, alterator-fbi, alterator-l10n
+BuildPreReq: alterator >= 3.2-alt6
 
 %description
 alterator module for basic system settings ( console and X11 keyboard, console font, system locale)
@@ -40,10 +40,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 
 %install
 %makeinstall
-%find_lang %name
 
 
-%files -f %name.lang
+%files
 %config(noreplace) %_sysconfdir/alterator/sysconfig
 %_datadir/alterator/ui/*/
 %_datadir/alterator/templates/*
