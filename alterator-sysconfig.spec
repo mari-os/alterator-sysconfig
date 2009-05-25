@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 1.0
-Release: alt6
+Release: alt7
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -51,6 +51,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Mon May 25 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt7
+- update both console and x11 keytable
+
 * Mon Apr 06 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt6
 - fix menu file
 
