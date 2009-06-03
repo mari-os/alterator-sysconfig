@@ -45,7 +45,6 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %files
 %config(noreplace) %_sysconfdir/alterator/sysconfig
 %_datadir/alterator/ui/*/
-%_datadir/alterator/templates/*
 %_datadir/alterator/applications/*
 %_alterator_backend3dir/*
 %_datadir/install2/preinstall.d/*
