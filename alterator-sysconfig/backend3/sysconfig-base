@@ -93,12 +93,7 @@ on_message(){
     language)
       case "$in_action" in
         list)
-          local lang_file=
-          if [ -n "$LANG" -a "$LANG" != "POSIX" -a "$LANG" != "C" ]; then
-            lang_file="$langlist.$(printf %s "$LANG" |
-              sed -r -e 's,[a-z]+_([^\.]+)(\..*)?,\1,' |
-              tr '[:upper:]' '[:lower:]')"
-          fi
+          local lang_file="$langlist.${in_language%%;*}"
           [ -s "$lang_file" ] || lang_file="$langlist.all"
           write_enum <"$lang_file"
         ;;

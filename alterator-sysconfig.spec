@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 1.0
-Release: alt8
+Version: 1.1
+Release: alt1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -50,6 +50,9 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Tue Nov 10 2009 Stanislav Ievlev <inger@altlinux.org> 1.1-alt1
+- language selection ui: use modern form API
+
 * Wed Jun 03 2009 Stanislav Ievlev <inger@altlinux.org> 1.0-alt8
 - use new form API (closes: #20288)
 

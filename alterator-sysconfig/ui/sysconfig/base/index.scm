@@ -1,11 +1,13 @@
 (document:surround "/std/frame")
-(document:insert "/std/functions")
 
 ;;; language stuff
 
 (define (current-language)
-  (and-let* ((l (langlist value)))
+  (and-let* ((l (form-value "langlist")))
     (string-cut l #\:)))
+
+(define (current-keyboard)
+  (form-value "keyboard_type"))
 
 (define (label+icon x)
   (cons (woo-get-option x 'label)
@@ -26,30 +28,31 @@
 
   ;;common hacks
   (let ((_ (make-translator "alterator-sysconfig" (session-language))))
-    (label1 text (_ "Select your language:"))
-    (label2 text (_ "Please select keyboard switch type:"))))
+    (form-update-value "label1" (_ "Select your language:"))
+    (form-update-value "label2" (_ "Please select keyboard switch type:"))))
 
 (define (default-language)
   (define-operation get-lang)
   (string-join (get-lang (fluid-ref generic-session)) ":"))
 
-(define (update-lang)
+(define (default-keyboard lst)
+  (let ((current (woo-get-option (woo-read-first "/sysconfig-base/kbd") 'layout)))
+    (cond
+      ((not-empty-string? current) current)
+      ((pair? lst) (woo-get-option (car lst) 'name))
+      (else ""))))
+
+(define (update-language)
   (change-translations)
-  (keyboard-type enumref "/sysconfig-base/kbd")
-  (and (positive? (keyboard-type count)) (default-keyboard)))
-
-;;; keyboard stuff
-
-(define (default-keyboard)
-  (keyboard-type value (woo-get-option (woo-read-first "/sysconfig-base/kbd") 'layout))
-  (or (positive? (keyboard-type current))
-      (keyboard-type current 0)))
+  (let ((keyboard-list (woo-list "/sysconfig-base/kbd" 'language (form-value "language"))))
+    (form-update-enum "keyboard_type" keyboard-list)
+    (form-update-value "keyboard_type" (default-keyboard keyboard-list))))
 
 (define (write-sysconfig)
   (catch/message
     (lambda()
       (let ((lang (current-language))
-	    (kbd (keyboard-type value)))
+	    (kbd (current-keyboard)))
 	(woo-write "/sysconfig-base/language" 'lang lang)
 	(woo-write "/sysconfig-base/kbd" 'layout kbd)
 	(simple-notify document:root 'action "language" 'value lang)
@@ -61,15 +64,11 @@
   columns "100"
   margin 50
 
-  (document:id label1 (label text "Select your language:"))
-
-  (document:id langlist (listbox (when selected (update-lang))))
-
+  (label name "label1" value "Select your language:")
+  (listbox name "langlist")
   (label)
-
-  (document:id label2 (label text "Please select keyboard switch type:"))
-
-  (document:id keyboard-type (listbox)))
+  (label name "label2" value "Please select keyboard switch type:")
+  (listbox name "keyboard_type"))
 
 (frame:on-next (thunk (or (write-sysconfig) 'cancel)))
 
@@ -77,6 +76,8 @@
   (when loaded
     (catch/message
       (lambda()
-	(langlist enumref "/sysconfig-base/language"
-		  value (default-language)
-		  selected)))))
+	(form-update-enum "langlist" (woo-list "/sysconfig-base/language" 'language (form-value "language")))
+	(form-update-value "langlist" (default-language))
+	(form-bind "langlist" "change" update-language)
+	(update-language)))))
+
