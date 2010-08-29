@@ -19,6 +19,8 @@
 
 . install2-init-functions
 
+mkdir -p "$destdir/etc/sysconfig/"
+
 [ ! -f "/etc/sysconfig/i18n" ] ||
 	cp -af "/etc/sysconfig/i18n" "$destdir/etc/sysconfig/"
 
