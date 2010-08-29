@@ -2,18 +2,18 @@
 
 Name: alterator-sysconfig
 Version: 1.1
-Release: alt1
+Release: alt1.1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
 Provides: alterator-syskbd = %version, alterator-proxy = %version
 Obsoletes: alterator-syskbd, alterator-proxy
 
+Url: http://www.altlinux.org/Alterator
+Source:%name-%version.tar
 Packager: Stanislav Ievlev <inger@altlinux.org>
 
-BuildArch:	noarch
-
-Source:%name-%version.tar
+BuildArch: noarch
 
 Summary: alterator module for basic system settings
 License: GPL
@@ -30,17 +30,17 @@ Conflicts: alterator-wizardface < 0.5-alt7
 BuildPreReq: alterator >= 3.2-alt6
 
 %description
-alterator module for basic system settings ( console and X11 keyboard, console font, system locale)
+alterator module for basic system settings
+(console and X11 keyboard, console font, system locale)
 
 %prep
-%setup -q
+%setup
 
 %build
 %make_build libdir=%_libdir
 
 %install
 %makeinstall
-
 
 %files
 %config(noreplace) %_sysconfdir/alterator/sysconfig
@@ -50,6 +50,12 @@ alterator module for basic system settings ( console and X11 keyboard, console f
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Sun Aug 29 2010 Michael Shigorin <mike@altlinux.org> 1.1-alt1.1
+- fixed 20-sysconfig.sh to ensure /etc/sysconfig existence
+- fixed thinko in sysconfig-proxy (HTTPS_PROXY=https://)
+- minor spec cleanup
+- added an Url:
+
 * Tue Nov 10 2009 Stanislav Ievlev <inger@altlinux.org> 1.1-alt1
 - language selection ui: use modern form API
 
