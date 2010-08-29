@@ -43,8 +43,8 @@ on_message()
 		    url="$url:$in_port"
 
 		shell_config_set "$proxy_conf_file" HTTP_PROXY "http://$url"
-		shell_config_set "$proxy_conf_file" HTTPS_PROXY "https://$url"
-		shell_config_set "$proxy_conf_file" FTP_PROXY "ftp://$url"
+		shell_config_set "$proxy_conf_file" HTTPS_PROXY "http://$url"
+		shell_config_set "$proxy_conf_file" FTP_PROXY "http://$url"
 	    else
 		shell_config_set "$proxy_conf_file" HTTP_PROXY ""
 		shell_config_set "$proxy_conf_file" HTTPS_PROXY ""
