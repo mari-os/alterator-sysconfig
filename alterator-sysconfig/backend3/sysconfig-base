@@ -13,6 +13,7 @@ KBDDIR=$ALTCONFDIR/kbd
 CONFIGDIR=/etc/sysconfig/
 KBD_CONFIG=/etc/sysconfig/keyboard
 XKB_CONFIG=/etc/X11/xinit/Xkbmap
+export DISPLAY=${DISPLAY:-:0}
 
 i18n_conf="/etc/sysconfig/i18n"
 langmap_conf="/etc/sysconfig/langmap"

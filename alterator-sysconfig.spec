@@ -1,8 +1,8 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 1.1
-Release: alt1.1
+Version: 1.2
+Release: alt1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -50,6 +50,9 @@ alterator module for basic system settings
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Thu Feb 24 2011 Anton V. Boyarshinov <boyarsh@altlinux.ru> 1.2-alt1
+- DYSPLAY settimg added if none set
+
 * Sun Aug 29 2010 Michael Shigorin <mike@altlinux.org> 1.1-alt1.1
 - fixed 20-sysconfig.sh to ensure /etc/sysconfig existence
 - fixed thinko in sysconfig-proxy (HTTPS_PROXY=https://)
