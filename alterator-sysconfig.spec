@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 1.2.1
-Release: alt1
+Release: alt2
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -50,6 +50,9 @@ alterator module for basic system settings
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Tue Sep 20 2011 Radik Usupov <radik@altlinux.org> 1.2.1-alt2
+- Added langlist.tt_RU
+
 * Wed Mar 16 2011 Michael Shigorin <mike@altlinux.org> 1.2.1-alt1
 - changed default console font to UniCyr_8x16 (closes: #25225)
 
