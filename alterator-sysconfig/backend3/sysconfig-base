@@ -114,6 +114,11 @@ on_message(){
             printf 'SUPPORTED=%s\n' "$(write_locale "$firstlang")">>"$i18n_conf"
           fi
 
+          # Hack for tt locale
+          if [ "${firstlang%.*}" = 'tt_RU' ]; then
+              echo 'LANGUAGE=tt:ru' >>"$i18n_conf"
+          fi
+
           sed 's,^%_install_langs[[:space:]].*,%_install_langs all,' -i "$rpm_conf"
         ;;
       esac
