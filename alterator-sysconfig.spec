@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 1.2.1
-Release: alt2
+Release: alt3
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 
@@ -50,6 +50,9 @@ alterator module for basic system settings
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Tue Feb 14 2012 Andrey Cherepanov <cas@altlinux.org> 1.2.1-alt3
+- Hack for correct fallback language for tt_RU (thanks sem@) (closes: #26931)
+
 * Tue Sep 20 2011 Radik Usupov <radik@altlinux.org> 1.2.1-alt2
 - Added langlist.tt_RU
 
