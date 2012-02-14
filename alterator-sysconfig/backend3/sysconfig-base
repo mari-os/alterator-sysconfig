@@ -116,8 +116,9 @@ on_message(){
 
           # Hack for tt locale
           if [ "${firstlang%.*}" = 'tt_RU' ]; then
-              echo 'LANGUAGE=tt:ru' >>"$i18n_conf"
-          fi
+			  echo 'LANGUAGE=tt:ru' >>"$i18n_conf"
+			  subst 's/^SUPPORTED=.*$/SUPPORTED=tt_RU.UTF-8:ru_RU.UTF-8/' "$i18n_conf"
+		  fi
 
           sed 's,^%_install_langs[[:space:]].*,%_install_langs all,' -i "$rpm_conf"
         ;;
