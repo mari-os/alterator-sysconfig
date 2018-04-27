@@ -13,11 +13,13 @@ KBDDIR=$ALTCONFDIR/kbd
 CONFIGDIR=/etc/sysconfig/
 KBD_CONFIG=/etc/sysconfig/keyboard
 XKB_CONFIG=/etc/X11/xinit/Xkbmap
+LOCALECTL=/usr/bin/localectl
 export DISPLAY=${DISPLAY:-:0}
 
 i18n_conf="/etc/sysconfig/i18n"
 langmap_conf="/etc/sysconfig/langmap"
 rpm_conf="/etc/rpm/macros"
+localectl_conf="/etc/locale.conf"
 
 langlist="/etc/alterator/sysconfig/lang/langlist"
 po_charset="UTF-8"
@@ -55,6 +57,16 @@ default_kbd(){
 write_locale(){
   local l="$1";shift
   [ "$l" != "POSIX" ] && echo "$l.$po_charset" || echo "$l"
+}
+
+write_locale_conf(){
+  local lang="$1";shift
+  if [ -e "$localectl_conf" ]; then
+    # Replace old value of LANG variable with new or append it
+    sed -i "/^LANG=/{h;s/=.*/=$lang/};\${x;/^$/{s//LANG=$lang/;H};x}" "$localectl_conf"
+  else
+    printf 'LANG=%s\n' "$lang">"$localectl_conf"
+  fi
 }
 
 ### initial actions
@@ -106,6 +118,17 @@ on_message(){
           local firstlang="${in_lang%%;*}"
 
           printf 'LANG=%s\n' "$(write_locale "$firstlang")">"$i18n_conf"
+
+          local lang=$(write_locale "$firstlang")
+
+          if [ -x "$LOCALECTL" ]; then
+            $LOCALECTL set-locale LANG=$lang
+            if [ $? -ne 0 ]; then
+              write_locale_conf "$lang"
+            fi
+          else
+            write_locale_conf "$lang"
+          fi
 
           if echo "$in_language" | fgrep -qs ';'; then
             printf 'SUPPORTED=%s\n' "$(write_language "$in_language")">>"$i18n_conf"

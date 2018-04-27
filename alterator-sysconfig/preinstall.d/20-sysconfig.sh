@@ -35,3 +35,6 @@ mkdir -p "$destdir/etc/sysconfig/"
 
 [ ! -f "/etc/X11/xinit/Xkbmap" -o ! -d "$destdir/etc/X11/xinit" ] ||
 	cp -af "/etc/X11/xinit/Xkbmap" "$destdir/etc/X11/xinit/"
+
+[ ! -f "/etc/locale.conf" ] ||
+    cp -af "/etc/locale.conf" "$destdir/etc/"
