@@ -22,19 +22,19 @@
 mkdir -p "$destdir/etc/sysconfig/"
 
 [ ! -f "/etc/sysconfig/i18n" ] ||
-	cp -af "/etc/sysconfig/i18n" "$destdir/etc/sysconfig/"
+	install -Dm0644 "/etc/sysconfig/i18n" "$destdir/etc/sysconfig/i18n"
 
 [ ! -f "/etc/sysconfig/langmap" ] ||
-	cp -af "/etc/sysconfig/langmap" "$destdir/etc/sysconfig/"
+	install -Dm0644 "/etc/sysconfig/langmap" "$destdir/etc/sysconfig/langmap"
 
 [ ! -f "/etc/sysconfig/consolefont" ] ||
-	cp -af "/etc/sysconfig/consolefont" "$destdir/etc/sysconfig/"
+	install -Dm0644 "/etc/sysconfig/consolefont" "$destdir/etc/sysconfig/consolefont"
 
 [ ! -f "/etc/sysconfig/keyboard" ] ||
-	cp -af "/etc/sysconfig/keyboard" "$destdir/etc/sysconfig/"
+	install -Dm0644 "/etc/sysconfig/keyboard" "$destdir/etc/sysconfig/keyboard"
 
 [ ! -f "/etc/X11/xinit/Xkbmap" -o ! -d "$destdir/etc/X11/xinit" ] ||
-	cp -af "/etc/X11/xinit/Xkbmap" "$destdir/etc/X11/xinit/"
+	install -Dm0644 "/etc/X11/xinit/Xkbmap" "$destdir/etc/X11/xinit/Xkbmap"
 
 [ ! -f "/etc/locale.conf" ] ||
-    cp -af "/etc/locale.conf" "$destdir/etc/"
+	install -Dm0644 "/etc/locale.conf" "$destdir/etc/locale.conf"
