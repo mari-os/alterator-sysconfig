@@ -16,6 +16,7 @@ on_message()
 	    ;;
 	read)
 	    local url="$(shell_config_get "$proxy_conf_file" HTTP_PROXY)"
+	    local noproxy="$(shell_config_get "$proxy_conf_file" NO_PROXY | sed 's/"//g')"
 
 	    url="${url##http://}"
 
@@ -33,6 +34,7 @@ on_message()
 	    write_string_param port "$port"
 	    write_string_param login "$login"
 	    write_string_param passwd "$passwd"
+	    write_string_param noproxy "$noproxy"
 	    ;;
 	write)
 	    if [ -n "$in_server" ]; then
@@ -45,10 +47,12 @@ on_message()
 		shell_config_set "$proxy_conf_file" HTTP_PROXY "http://$url"
 		shell_config_set "$proxy_conf_file" HTTPS_PROXY "http://$url"
 		shell_config_set "$proxy_conf_file" FTP_PROXY "http://$url"
+		shell_config_set "$proxy_conf_file" NO_PROXY "\"$in_noproxy\""
 	    else
 		shell_config_set "$proxy_conf_file" HTTP_PROXY ""
 		shell_config_set "$proxy_conf_file" HTTPS_PROXY ""
 		shell_config_set "$proxy_conf_file" FTP_PROXY ""
+		shell_config_set "$proxy_conf_file" NO_PROXY ""
 	    fi
 	    ;;
     esac

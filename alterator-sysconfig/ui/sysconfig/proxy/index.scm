@@ -19,6 +19,12 @@
 
   (label colspan 4)
 
+  (label text (_ "No Proxy for:") align "right" name "noproxy")
+  (edit colspan 3 name "noproxy")
+  (label) (label text (small (_ "(multiple values should be comma separated)")))
+
+  (label colspan 4)
+
   (label)
   (hbox
     colspan 3

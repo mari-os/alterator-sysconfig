@@ -8,14 +8,14 @@
     (lambda()
       (form-update-value "passwd" "")
       (form-update-value-list
-        '("server" "port" "login")
+        '("server" "port" "login" "noproxy")
         (woo-read-first "/sysconfig-proxy")))))
 
 (define (ui-write)
   (catch/message
     (lambda()
       (apply woo-write "/sysconfig-proxy"
-                       (form-value-list '("server" "port" "login" "passwd" "language")))
+                       (form-value-list '("server" "port" "login" "passwd" "noproxy" "language")))
       (ui-read))))
 
 (define (on-load)
