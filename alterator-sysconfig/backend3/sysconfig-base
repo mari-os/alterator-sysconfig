@@ -144,6 +144,20 @@ on_message(){
 		  fi
 
           sed 's,^%_install_langs[[:space:]].*,%_install_langs all,' -i "$rpm_conf"
+
+          if [ -n "$DURING_INSTALL" ]; then
+              # Setup slideshow for selected language
+              local slideshow_conf='/etc/alterator/slideshow.conf'
+              local sl_lang="${firstlang%%_*}"
+              url="$(shell_config_get "$slideshow_conf" url)"
+              # Reset url to default in case it was already localized
+              # by installer-feature-slideshow
+              url="${url%-*}"
+              # Setup proper localized slideshow
+              if [ -n "$sl_lang" ] && [ -n "$url" ] && [ -d "$url-$sl_lang" ]; then
+                  shell_config_set "$slideshow_conf" url "$url-$sl_lang"
+              fi
+          fi
         ;;
       esac
     ;;
