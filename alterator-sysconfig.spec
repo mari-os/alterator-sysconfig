@@ -16,7 +16,7 @@ Packager: Stanislav Ievlev <inger@altlinux.org>
 BuildArch: noarch
 
 Summary: alterator module for basic system settings
-License: GPL
+License: GPL-2.0-or-later
 Group: System/Configuration/Other
 
 Requires: alterator-sh-functions, setup >= 2.2.12-alt1
