@@ -1,4 +1,4 @@
 #default layouts
 #format:language	keymap
-ru_RU   ctrl_shift_toggle
-tt_RU   ctrl_shift_toggle
+ru_RU   alt_sh_toggle
+tt_RU   alt_sh_toggle
