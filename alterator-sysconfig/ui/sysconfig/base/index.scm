@@ -33,7 +33,11 @@
 
 (define (default-language)
   (define-operation get-lang)
-  (string-join (get-lang (fluid-ref generic-session)) ":"))
+  (let ((lang (string-join (get-lang (fluid-ref generic-session)) ":")))
+    (if (and (not-empty-string? lang)
+             (string<> "C" lang))
+      lang
+      "en_US")))
 
 (define (default-keyboard lst)
   (let ((current (woo-get-option (woo-read-first "/sysconfig-base/kbd") 'layout)))
