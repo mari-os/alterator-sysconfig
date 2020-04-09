@@ -26,6 +26,7 @@ Requires: alterator-l10n >= 2.2-alt3
 
 Conflicts: alterator-lookout < 0.9-alt5
 Conflicts: alterator-wizardface < 0.5-alt7
+Conflicts: alterator-browser-qt5 < 3.1.5-alt1
 
 BuildPreReq: alterator >= 3.2-alt6
 
