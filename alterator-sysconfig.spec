@@ -1,7 +1,7 @@
 %define _altdata_dir %_datadir/alterator
 
 Name: alterator-sysconfig
-Version: 1.3.2
+Version: 1.3.3
 Release: alt1
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
@@ -51,6 +51,9 @@ alterator module for basic system settings
 %_datadir/install2/preinstall.d/*
 
 %changelog
+* Thu Apr 09 2020 Paul Wolneykien <manowar@altlinux.org> 1.3.3-alt1
+- Fix: Added "language" notification on language change (closes: 38031).
+
 * Fri Jan 17 2020 Mikhail Efremov <sem@altlinux.org> 1.3.2-alt1
 - Add Portuguese (Brazil) language again.
 - Show language name in this language (closes: #32923).
