@@ -17,6 +17,9 @@
   (define-operation set-lang)
   (set-lang (fluid-ref generic-session) (current-language))
 
+  (simple-notify document:root 'action "language"
+                               'value (current-language))
+
   ;;wizardface specific hacks
   (and-let* ((wizard-id (global 'frame:wizard))
 	     (_ (make-translator "alterator-wizard" (session-language))))
