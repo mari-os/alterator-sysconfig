@@ -17,17 +17,21 @@
   (define-operation set-lang)
   (set-lang (fluid-ref generic-session) (current-language))
 
-  (simple-notify document:root 'action "language"
-                               'value (current-language))
-
   ;;wizardface specific hacks
   (and-let* ((wizard-id (global 'frame:wizard))
-	     (_ (make-translator "alterator-wizard" (session-language))))
+	     (_ (make-translator "alterator-wizard" (session-language)))
+	     (step-list (woo-list "/step-list")))
     (wizard-id steps-clear)
-    (wizard-id steps (map label+icon (woo-list "/step-list")))
+    (wizard-id steps (map label+icon step-list))
     (wizard-id current-step 0)
     (wizard-id action-text 'help (_ "Help"))
-    (wizard-id action-text 'forward (_ "Next")))
+    (wizard-id action-text 'forward (_ "Next"))
+    (document:root
+       help (woo-get-option
+             (woo-read-first "/help/"
+                             'topic (woo-get-option (car step-list)
+                                                    'help))
+             'url)))
 
   ;;common hacks
   (let ((_ (make-translator "alterator-sysconfig" (session-language))))
