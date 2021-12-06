@@ -153,6 +153,8 @@ on_message(){
               # Reset url to default in case it was already localized
               # by installer-feature-slideshow
               url="${url%-*}"
+			  # Use English slideshow as default
+			  [ -d "$url-$sl_lang" ] || sl_lang='en'
               # Setup proper localized slideshow
               if [ -n "$sl_lang" ] && [ -n "$url" ] && [ -d "$url-$sl_lang" ]; then
                   shell_config_set "$slideshow_conf" url "$url-$sl_lang"
