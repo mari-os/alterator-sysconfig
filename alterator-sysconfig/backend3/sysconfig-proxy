@@ -4,8 +4,49 @@ alterator_api_version=1
 po_domain="alterator-sysconfig"
 proxy_conf_file=/etc/sysconfig/network
 
+kwriteconf=/usr/bin/kwriteconfig5
+kconfdir=/etc/kf5/xdg
+kioslaverc=$kconfdir/kioslaverc
+kproxygroup='Proxy Settings'
+
 . alterator-sh-functions
 . shell-config
+
+write_kio_proxy_key() {
+	local key="$1"
+	local value="$2"
+	$kwriteconf --file "$kioslaverc" --group "$kproxygroup" --key "$key" "$value"
+}
+
+write_kio_proxy_conf() {
+	local url="$1"
+	local port="$2"
+	[ -n "$port" ] && url="$url $port"
+
+	# kwriteconfig5 creates file with 0600 access rights,
+	# but 0644 is required for user-accessible config
+	touch "$kioslaverc"
+
+	if [ -n "$1" ]; then
+		# Use manualy specified proxy configuration
+		write_kio_proxy_key 'ProxyType' '1'
+		write_kio_proxy_key 'NoProxyFor' "$in_noproxy"
+		write_kio_proxy_key 'Proxy Config Script' ''
+		write_kio_proxy_key 'ReversedException' 'false'
+		write_kio_proxy_key 'ftpProxy' "ftp://$url"
+		write_kio_proxy_key 'httpProxy' "http://$url"
+		write_kio_proxy_key 'httpsProxy' "http://$url"
+		write_kio_proxy_key 'socksProxy' "socks://$url"
+	else
+		# No Proxy
+		write_kio_proxy_key 'ProxyType' '0'
+	fi
+}
+
+write_proxy_for_others() {
+	# KDEs proxy settings module
+	[ -x "$kwriteconf" ] && [ -d "$kconfdir" ] && write_kio_proxy_conf "$1" "$2"
+}
 
 on_message()
 {
@@ -41,6 +82,9 @@ on_message()
 		local url="$in_server"
 		[ -z "$in_login" -o -z "$in_passwd" ] ||
 		    url="$(encode-url-component "$in_login"):$(encode-url-component "$in_passwd")@$url"
+
+		write_proxy_for_others "$url" "$in_port"
+
 		[ -z "$in_port" ] ||
 		    url="$url:$in_port"
 
@@ -53,6 +97,7 @@ on_message()
 		shell_config_set "$proxy_conf_file" HTTPS_PROXY ""
 		shell_config_set "$proxy_conf_file" FTP_PROXY ""
 		shell_config_set "$proxy_conf_file" NO_PROXY ""
+		write_proxy_for_others
 	    fi
 	    ;;
     esac
