@@ -68,6 +68,6 @@ if [ -e "$SYSCONFIG_KEYBOARD" -a -e "$SYSCONFIG_CONSOLEFONT" ]; then
 	[ -e "$SYSCONFIG_CONSOLEFONT" ] && . "$SYSCONFIG_CONSOLEFONT" &>/dev/null || :
 	[ -n "${SYSFONT-}" ] && shell_config_set "$destdir/$VCONSOLE_CONF" "FONT" $SYSFONT 2>&1 || :
 	[ -n "${SYSFONTACM-}" ] && shell_config_set "$destdir/$VCONSOLE_CONF" "FONT_MAP" $SYSFONTACM 2>&1 || :
-	[ -n "${UNIMAP-}" ] && shell_config_set "$destdir/$VCONSOLE_CONF" "FONT_UNIMAP" $UNIMAP 2>&1 || :
-	[ -n "${KEYTABLE-}" ] && shell_config_set "$destdir/$VCONSOLE_CONF" "KEYMAP" $KEYTABLE 2>&1 || :
+	[ -n "${UNIMAP-}" ] && shell_config_set "$destdir/$VCONSOLE_CONF" "FONT_UNIMAP" $UNIMAP 2>&1 || :
+	[ -n "${KEYTABLE-}" ] && shell_config_set "$destdir/$VCONSOLE_CONF" "KEYMAP" $KEYTABLE 2>&1 || :
 fi
