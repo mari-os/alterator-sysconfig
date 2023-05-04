@@ -17,6 +17,9 @@
   (label text (_ "Password:") align "right" name "passwd")
   (edit colspan 3 name "passwd" echo "stars")
 
+  (label)
+  (label text (_ "<strong>Attention!</strong> Account and password work only for curl and wget. If you use proxy for apt-get or any graphical web-browser, leave these fields empty.") text-wrap #t colspan 3)
+
   (label colspan 4)
 
   (label text (_ "No Proxy for:") align "right" name "noproxy")

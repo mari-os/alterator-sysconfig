@@ -6,5 +6,5 @@ Terminal=false
 Name=Proxy settings
 X-Alterator-URI=/sysconfig/proxy
 X-Alterator-Help=sysconfig-proxy
-Name[ru]=Настройки proxy
+Name[ru]=Прокси-сервер
 Name[pt_BR]=Configurações do Proxy
