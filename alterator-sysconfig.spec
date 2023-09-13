@@ -2,7 +2,7 @@
 
 Name: alterator-sysconfig
 Version: 1.3.10
-Release: alt1
+Release: alt999
 
 %add_findreq_skiplist %_datadir/install2/preinstall.d/*
 

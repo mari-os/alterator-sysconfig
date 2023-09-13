@@ -1,0 +1,3 @@
+-layout	us,ru
+-option grp:rctrl_toggle,grp:switch,compose:menu
+-variant ,chm
