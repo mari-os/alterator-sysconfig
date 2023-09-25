@@ -56,7 +56,7 @@ default_kbd(){
 
 write_locale(){
   local l="$1";shift
-  [ "$l" != "POSIX" ] && echo "$l.$po_charset" || echo "$l"
+  [ "$l" != "POSIX" ] && [ "$l" != "mhr_RU" ] && echo "$l.$po_charset" || echo "$l"
 }
 
 write_locale_conf(){
@@ -142,9 +142,13 @@ on_message(){
 			  echo 'LANGUAGE=tt:ru' >>"$i18n_conf"
 			  subst 's/^SUPPORTED=.*$/SUPPORTED=tt_RU.UTF-8:ru_RU.UTF-8/' "$i18n_conf"
 		  fi
+	  # Hack for mhr locale
+          if [ "${firstlang%.*}" = 'mhr_RU' ]; then
+			  echo 'LANGUAGE=mhr:ru' >>"$i18n_conf"
+			  subst 's/^SUPPORTED=.*$/SUPPORTED=mhr_RU:ru_RU.UTF-8/' "$i18n_conf"
+		  fi
 
           sed 's,^%_install_langs[[:space:]].*,%_install_langs all,' -i "$rpm_conf"
-
           if [ -n "$DURING_INSTALL" ]; then
               # Setup slideshow for selected language
               local slideshow_conf='/etc/alterator/slideshow.conf'
